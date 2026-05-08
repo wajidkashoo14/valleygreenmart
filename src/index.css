@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --green-50:  #f0faf4;
+  --green-100: #d4f0e0;
+  --green-400: #4caf78;
+  --green-600: #2d7a50;
+  --green-800: #1a4d32;
+  --green-900: #0d2619;
+  --earth-400: #c4a054;
+  --cream:     #fdfcf8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: #1a2e1f;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f0faf4; }
+::-webkit-scrollbar-thumb { background: #4caf78; border-radius: 99px; }
+
+/* ─── Selection ─────────────────────────────── */
+::selection { background: #a8e1c1; color: #0d2619; }
+
+/* ─── Skeleton shimmer ───────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #f0f4f0 25%, #e0eee0 50%, #f0f4f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Page transition ────────────────────────── */
+.page-enter {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* ─── Mega dropdown ─────────────────────────── */
+.mega-dropdown {
+  transform-origin: top center;
+}
+
+/* ─── Product card image hover ───────────────── */
+.product-img-wrap {
+  overflow: hidden;
+}
+.product-img-emoji {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+.group:hover .product-img-emoji {
+  transform: scale(1.18) rotate(-4deg);
+}
+
+/* ─── Cart badge bounce ─────────────────────── */
+@keyframes badgeBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.5); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.badge-bounce { animation: badgeBounce 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ─── Hero grain texture ────────────────────── */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ─── Smooth focus rings ────────────────────── */
+*:focus-visible {
+  outline: 2px solid #4caf78;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Custom range input ────────────────────── */
+input[type='range'] {
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 99px;
+  background: #d4f0e0;
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2d7a50;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(45,122,80,0.3);
+  transition: transform 0.2s;
+}
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* ─── Toast ─────────────────────────────────── */
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(100%) scale(0.8); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastSlideOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 0; transform: translateX(100%) scale(0.8); }
+}
+.toast-enter { animation: toastSlideIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.toast-exit  { animation: toastSlideOut 0.25s ease forwards; }
+
+/* ─── Wishlist heart pulse ───────────────────── */
+@keyframes heartPulse {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.4); }
+  50%  { transform: scale(1.1); }
+  75%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.heart-pulse { animation: heartPulse 0.5s ease forwards; }
+
+/* ─── Floating label (checkout form) ────────── */
+.float-label { position: relative; }
+.float-label input:focus ~ label,
+.float-label input:not(:placeholder-shown) ~ label {
+  transform: translateY(-22px) scale(0.8);
+  color: #2d7a50;
+}
+.float-label label {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  transform-origin: left;
+  color: #7a9485;
+  font-size: 14px;
+}
+
+/* ─── Quantity button ───────────────────────── */
+@keyframes qtyPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.qty-pop { animation: qtyPop 0.25s ease; }
+
+/* ─── Loading spinner ────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  width: 24px; height: 24px;
+  border: 3px solid #d4f0e0;
+  border-top-color: #2d7a50;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ─── Accordion ──────────────────────────────── */
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
+}
+
+/* ─── Image lazy load fade ───────────────────── */
+.lazy-img {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.lazy-img.loaded { opacity: 1; }
+
+/* ─── Product image enhancements ────────────────── */
+img[src*="unsplash"] {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Saturate & brighten category images on hover */
+.group:hover .cat-hover-img {
+  transform: scale(1.12);
+  filter: saturate(1.2) brightness(1.06);
+}
+
+/* Smooth product card image zoom */
+.group:hover .prod-img-zoom {
+  transform: scale(1.1);
+  filter: saturate(1.1) brightness(1.02);
+}
+
+/* Hero product cards */
+.hero-card-img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.hero-card-img:hover {
+  transform: scale(1.06);
+}
