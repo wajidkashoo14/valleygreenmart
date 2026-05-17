@@ -21,7 +21,7 @@ export default function Cart() {
 
   if (cartProducts.length === 0) return (
     <PageWrapper>
-      <div className="max-w-7xl mx-auto px-6 py-24 text-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 300 }}>
           <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-5">
             <ShoppingCart size={36} className="text-green-300" />

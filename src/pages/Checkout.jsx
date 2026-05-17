@@ -36,7 +36,7 @@ export default function Checkout() {
 
   if (placed) return (
     <PageWrapper>
-      <div className="max-w-md mx-auto px-6 py-24 text-center">
+      <div className="max-w-md mx-auto px-4 py-16 sm:py-24 text-center">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check size={40} className="text-green-600" strokeWidth={3} />

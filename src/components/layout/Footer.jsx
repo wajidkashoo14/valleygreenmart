@@ -31,7 +31,7 @@ export default function Footer() {
     <footer className="bg-green-900 text-white">
       {/* Newsletter Banner */}
       <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="font-display text-xl font-semibold">Stay fresh, stay informed 🌿</h3>
             <p className="text-green-300 text-sm mt-1">Get seasonal updates, harvest news and exclusive offers.</p>
@@ -53,7 +53,7 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
@@ -70,15 +70,15 @@ export default function Footer() {
             <div className="mt-5 space-y-2 text-sm text-green-400">
               <div className="flex items-center gap-2">
                 <MapPin size={14} className="text-green-500 flex-shrink-0" />
-                <span>Saida Kadal Bridge Rainwari Srinagar Kashmir 190003</span>
+                <span>Lal Chowk, Srinagar, J&K 190001</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={14} className="text-green-500 flex-shrink-0" />
-                <span>+91 8899661747</span>
+                <span>+91 98765 43210</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-green-500 flex-shrink-0" />
-                <span>valleygreenmart@gmail.com</span>
+                <span>hello@valleygreenmart.in</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={14} className="text-green-500 flex-shrink-0" />
@@ -119,7 +119,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-sm text-green-500">
-            © 2026 Valley Green Mart. All rights reserved.
+            © 2025 Valley Green Mart. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-sm text-green-500">
             <span>🔒 Secure Payments</span>

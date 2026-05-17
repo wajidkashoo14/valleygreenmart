@@ -28,11 +28,11 @@ export default function Home() {
   return (
     <PageWrapper>
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-green-950 via-green-900 to-green-800 min-h-[88vh] flex items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-green-950 via-green-900 to-green-800 min-h-[70vh] sm:min-h-[88vh] flex items-center">
         {/* Background image overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1543362906-acfc16c67564?w=1800&q=85&auto=format&fit=crop')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=85&auto=format&fit=crop')" }}
         />
         {/* Grain texture */}
         <div className="hero-grain" />
@@ -40,33 +40,33 @@ export default function Home() {
         {/* Floating elements */}
         <motion.div animate={{ y: [0,-14,0] }} transition={{ repeat: Infinity, duration: 4, ease:'easeInOut' }}
           className="absolute top-20 right-[12%] w-20 h-20 rounded-full overflow-hidden opacity-30 border-2 border-white/20 hidden lg:block">
-          <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200&q=85&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </motion.div>
         <motion.div animate={{ y: [0,10,0] }} transition={{ repeat: Infinity, duration: 5, delay:1, ease:'easeInOut' }}
           className="absolute bottom-24 right-[20%] w-16 h-16 rounded-2xl overflow-hidden opacity-30 border-2 border-white/20 hidden lg:block">
-          <img src="https://images.unsplash.com/photo-1587049352851-8d4e89133924?w=200&q=85&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1587049352851-8d4e89133924?w=200&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </motion.div>
         <motion.div animate={{ y: [0,-8,0] }} transition={{ repeat: Infinity, duration: 3.5, delay:0.5, ease:'easeInOut' }}
           className="absolute top-40 left-[8%] w-14 h-14 rounded-xl overflow-hidden opacity-25 border border-white/20 hidden xl:block">
-          <img src="https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=200&q=85&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=200&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </motion.div>
 
-        <div className="relative max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center w-full">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 lg:py-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
           {/* Left content */}
           <div>
             <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-green-200 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-6">
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-green-200 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-widest mb-4 sm:mb-6">
               🌿 Farm-to-Door from Kashmir
             </motion.div>
 
             <motion.h1 initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2 }}
-              className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
+              className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
               Pure from<br />the <span className="text-green-300 italic">Valley</span>,<br />
               <span className="text-3xl sm:text-4xl font-medium text-green-200 not-italic">Delivered Fresh</span>
             </motion.h1>
 
             <motion.p initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.3 }}
-              className="text-green-300 text-lg leading-relaxed max-w-md mb-8">
+              className="text-green-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-md mb-6 sm:mb-8">
               Premium organic vegetables, fruits, dry fruits, saffron and specialty Kashmiri products — sourced directly from local farmers.
             </motion.p>
 
@@ -88,7 +88,7 @@ export default function Home() {
 
             {/* Stats */}
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.6 }}
-              className="flex flex-wrap gap-8 mt-12 pt-8 border-t border-white/10">
+              className="flex flex-wrap gap-5 sm:gap-8 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10">
               {[['2,400+','Products'],['100%','Organic'],['48h','Fresh Delivery'],['4.9★','Customer Rating']].map(([val, label]) => (
                 <div key={label}>
                   <div className="font-display text-2xl font-bold text-white">{val}</div>
@@ -124,7 +124,7 @@ export default function Home() {
 
       {/* ── Features strip ──────────────────────────────── */}
       <section className="bg-white border-b border-green-100">
-        <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {FEATURES.map((f, i) => (
             <motion.div key={f.title} initial={{ opacity:0, y:16 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay: i*0.07 }}
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors">
@@ -139,18 +139,18 @@ export default function Home() {
       </section>
 
       {/* ── Category grid ───────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <div className="flex items-end justify-between mb-8">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-green-500 mb-1">Browse By</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-green-900">Shop Categories</h2>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-green-900">Shop Categories</h2>
           </div>
           <button onClick={() => navigate('/products')} className="text-sm font-semibold text-green-700 hover:text-green-900 transition-colors hidden sm:flex items-center gap-1">
             All products <ArrowRight size={14} />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 xs:grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
           {CATEGORIES.map((cat, i) => (
             <motion.button
               key={cat.key}
@@ -171,29 +171,29 @@ export default function Home() {
       </section>
 
       {/* ── Featured Products ───────────────────────────── */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-8">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-green-500 mb-1">Hand-picked</p>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-green-900">Featured Products</h2>
+              <h2 className="font-display text-2xl sm:text-3xl font-bold text-green-900">Featured Products</h2>
             </div>
             <button onClick={() => navigate('/products')} className="hidden sm:flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-900">
               View all <ArrowRight size={14} />
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {featured.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         </div>
       </section>
 
       {/* ── Kashmir Specials banner ─────────────────────── */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="relative rounded-3xl overflow-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden">
           <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1600&q=88&auto=format&fit=crop" alt="Kashmir Saffron" className="w-full h-56 sm:h-72 object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-green-950/90 via-green-900/70 to-transparent flex items-center">
-            <div className="px-8 sm:px-12 max-w-lg">
+            <div className="px-5 sm:px-8 lg:px-12 max-w-lg">
               <div className="inline-flex items-center gap-1.5 bg-amber-400/20 border border-amber-400/30 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold mb-3">
                 🌸 GI Tagged · Pampore, Kashmir
               </div>
@@ -211,34 +211,34 @@ export default function Home() {
       </section>
 
       {/* ── Kashmir Specials ────────────────────────────── */}
-      <section className="bg-green-50 py-16">
+      <section className="bg-green-50 py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-8">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-green-500 mb-1">Authentic</p>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-green-900">Kashmir Specials</h2>
+              <h2 className="font-display text-2xl sm:text-3xl font-bold text-green-900">Kashmir Specials</h2>
             </div>
             <button onClick={() => navigate('/products')} className="hidden sm:flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-900">
               Explore all <ArrowRight size={14} />
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {specials.slice(0, 8).map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         </div>
       </section>
 
       {/* ── Testimonials ────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <div className="text-center mb-10">
           <p className="text-xs font-bold uppercase tracking-widest text-green-500 mb-1">Reviews</p>
           <h2 className="font-display text-3xl font-bold text-green-900">What our customers say</h2>
         </div>
         <div className="grid sm:grid-cols-3 gap-5">
           {[
-            { name:'Arjun Sharma', city:'Delhi', review:`The Kashmir saffron is genuinely the finest I've ever tasted. Arrived in perfect packaging, completely authentic.`, rating:5, img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=85&auto=format&fit=crop&face' },
-            { name:'Priya Nair', city:'Bangalore', review:'Mamra almonds are incredible — nothing like regular almonds. The whole dry fruit collection is worth every rupee.', rating:5, img:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&q=85&auto=format&fit=crop&face' },
-            { name:'Farida Khan', city:'Mumbai', review:'Ordered the wedding gift box for Eid — absolutely stunning packaging and the quality blew everyone away!', rating:5, img:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&q=85&auto=format&fit=crop&face' },
+            { name:'Arjun Sharma', city:'Delhi', review:`The Kashmir saffron is genuinely the finest I've ever tasted. Arrived in perfect packaging, completely authentic.`, rating:5, img:'https://api.dicebear.com/7.x/personas/svg?seed=Arjun&backgroundColor=d1ffe4' },
+            { name:'Priya Nair', city:'Bangalore', review:'Mamra almonds are incredible — nothing like regular almonds. The whole dry fruit collection is worth every rupee.', rating:5, img:'https://api.dicebear.com/7.x/personas/svg?seed=Priya&backgroundColor=ffd1e4' },
+            { name:'Farida Khan', city:'Mumbai', review:'Ordered the wedding gift box for Eid — absolutely stunning packaging and the quality blew everyone away!', rating:5, img:'https://api.dicebear.com/7.x/personas/svg?seed=Farida&backgroundColor=d1e4ff' },
           ].map((t, i) => (
             <motion.div key={t.name} initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay: i*0.1 }}
               className="bg-white rounded-2xl border border-green-100 p-5 shadow-card">

@@ -24,7 +24,7 @@ export default function ProductDetail() {
 
   if (!product) return (
     <PageWrapper>
-      <div className="max-w-7xl mx-auto px-6 py-24 text-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 text-center">
         <div className="text-6xl mb-4">😕</div>
         <h2 className="font-display text-2xl text-green-900 mb-2">Product not found</h2>
         <p className="text-green-600 mb-6">The product you're looking for doesn't exist.</p>
@@ -218,7 +218,7 @@ export default function ProductDetail() {
         {related.length > 0 && (
           <section className="mt-16">
             <h2 className="font-display font-bold text-2xl text-green-900 mb-6">You may also like</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {related.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           </section>

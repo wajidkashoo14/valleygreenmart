@@ -131,7 +131,7 @@ export default function Products() {
     <PageWrapper>
       {/* Header */}
       <div className="bg-white border-b border-green-100">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <nav className="text-xs text-green-400 mb-2 flex items-center gap-1.5">
             <a href="/" className="hover:text-green-700 transition-colors cursor-pointer">Home</a>
             <span>/</span>
@@ -141,7 +141,7 @@ export default function Products() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Toolbar */}
         <div className="flex items-center gap-3 mb-6 flex-wrap">
           {/* Mobile filter toggle */}
@@ -211,7 +211,7 @@ export default function Products() {
           {/* Grid */}
           <div className="flex-1">
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : filtered.length === 0 ? (
@@ -224,7 +224,7 @@ export default function Products() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {filtered.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
               </div>
             )}

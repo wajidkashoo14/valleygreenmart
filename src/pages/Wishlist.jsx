@@ -29,7 +29,7 @@ export default function Wishlist() {
             </Link>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {wishlistProducts.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
           </div>
         )}
