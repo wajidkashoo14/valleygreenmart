@@ -119,7 +119,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-sm text-green-500">
-            © 2025 Valley Green Mart. All rights reserved.
+            © 2026 Valley Green Mart. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-sm text-green-500">
             <span>🔒 Secure Payments</span>
