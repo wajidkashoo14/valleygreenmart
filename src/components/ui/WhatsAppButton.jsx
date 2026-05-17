@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Send } from 'lucide-react'
 
-const WHATSAPP_NUMBER = '918076145736'
+const WHATSAPP_NUMBER = '919186361336'
 
 const QUICK_MESSAGES = [
   {

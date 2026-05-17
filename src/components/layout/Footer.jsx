@@ -70,15 +70,15 @@ export default function Footer() {
             <div className="mt-5 space-y-2 text-sm text-green-400">
               <div className="flex items-center gap-2">
                 <MapPin size={14} className="text-green-500 flex-shrink-0" />
-                <span>Lal Chowk, Srinagar, J&K 190001</span>
+                <span>Saida Kadal Bridge Rainwari Srinagar Kashmir 190003</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={14} className="text-green-500 flex-shrink-0" />
-                <span>+91 98765 43210</span>
+                <span>+91 77809 66909</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-green-500 flex-shrink-0" />
-                <span>hello@valleygreenmart.in</span>
+                <span>info@valleygreenmart.com</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={14} className="text-green-500 flex-shrink-0" />
