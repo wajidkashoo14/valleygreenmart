@@ -58,33 +58,37 @@ const SLIDES = [
     url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1600&q=92&auto=format&fit=crop',
     title: 'Pure Kashmir Saffron (Kesar)',
     sub: 'Pampore · ISO Certified · Lab Tested',
-    tag: '✨ World\'s Finest Spice',
+    tag: "✨ World's Finest Spice",
     cta: 'Shop Saffron',
     ctaLink: '/products?category=Saffron',
     color: 'from-red-950/85 via-red-900/40',
   },
 ]
 
-const INTERVAL = 2000
+const INTERVAL = 4000
 
 export default function KashmirCarousel() {
-  const [idx,    setIdx]    = useState(0)
-  const [dir,    setDir]    = useState(1)
+  const [idx, setIdx] = useState(0)
+  const [dir, setDir] = useState(1)
   const [paused, setPaused] = useState(false)
-  const timer   = useRef(null)
-  const touchX  = useRef(null)
+
+  const timer = useRef(null)
+  const touchX = useRef(null)
 
   const go = useCallback((to, d) => {
     setDir(d)
     setIdx((to + SLIDES.length) % SLIDES.length)
   }, [])
 
-  const next = useCallback(() => go(idx + 1,  1), [idx, go])
+  const next = useCallback(() => go(idx + 1, 1), [idx, go])
   const prev = useCallback(() => go(idx - 1, -1), [idx, go])
 
   useEffect(() => {
     if (paused) return
-    timer.current = setTimeout(() => { setDir(1); setIdx(i => (i + 1) % SLIDES.length) }, INTERVAL)
+    timer.current = setTimeout(() => {
+      setDir(1)
+      setIdx(i => (i + 1) % SLIDES.length)
+    }, INTERVAL)
     return () => clearTimeout(timer.current)
   }, [idx, paused])
 
@@ -93,7 +97,7 @@ export default function KashmirCarousel() {
   return (
     <div
       className="relative w-full overflow-hidden bg-green-950"
-      style={{ height: 'clamp(300px, 58vw, 680px)' }}
+      style={{ height: 'clamp(320px, 70vw, 720px)' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={e => { touchX.current = e.touches[0].clientX }}
@@ -104,15 +108,15 @@ export default function KashmirCarousel() {
         touchX.current = null
       }}
     >
-      {/* ── Slides ──────────────────────────────────────────────────────── */}
+      {/* Slides */}
       <AnimatePresence mode="sync" custom={dir}>
         <motion.div
           key={slide.id}
           custom={dir}
           variants={{
-            enter:  d => ({ opacity: 0, x: d > 0 ? '6%' : '-6%' }),
-            center: {    opacity: 1, x: 0 },
-            exit:   d => ({ opacity: 0, x: d > 0 ? '-6%' : '6%' }),
+            enter: d => ({ opacity: 0, x: d > 0 ? '6%' : '-6%' }),
+            center: { opacity: 1, x: 0 },
+            exit: d => ({ opacity: 0, x: d > 0 ? '-6%' : '6%' }),
           }}
           initial="enter"
           animate="center"
@@ -120,7 +124,6 @@ export default function KashmirCarousel() {
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="absolute inset-0"
         >
-          {/* Ken-Burns zoom */}
           <motion.img
             src={slide.url}
             alt={slide.title}
@@ -131,13 +134,12 @@ export default function KashmirCarousel() {
             animate={{ scale: 1.12 }}
             transition={{ duration: (INTERVAL + 800) / 1000, ease: 'linear' }}
           />
-          {/* Gradient overlay — dark on left/bottom, transparent top-right */}
           <div className={`absolute inset-0 bg-gradient-to-r ${slide.color} to-transparent`} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Top progress bar ─────────────────────────────────────────────── */}
+      {/* Progress Bar */}
       <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-2 sm:p-3">
         {SLIDES.map((s, i) => (
           <div
@@ -159,7 +161,7 @@ export default function KashmirCarousel() {
         ))}
       </div>
 
-      {/* ── Text content ─────────────────────────────────────────────────── */}
+      {/* Content */}
       <AnimatePresence mode="wait">
         <motion.div
           key={`txt-${slide.id}`}
@@ -167,66 +169,102 @@ export default function KashmirCarousel() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="absolute bottom-0 left-0 right-0 z-10 px-5 pb-6 pt-16 sm:p-8 lg:p-12"
+          className="absolute bottom-0 left-0 right-0 z-10 px-4 pb-5 pt-20 sm:px-6 sm:pb-8 lg:px-12 lg:pb-12"
         >
-          {/* Tag badge */}
-          <div className="inline-flex max-w-full items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white/95 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-3">
+          {/* Tag */}
+          <div className="inline-flex max-w-full items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white/95 px-3 py-1 rounded-full text-[9px] sm:text-xs font-bold uppercase tracking-wider mb-3">
             <span className="truncate">{slide.tag}</span>
           </div>
 
           {/* Title */}
-          <h2 className="font-display font-bold text-white leading-tight mb-2 drop-shadow-lg"
-            style={{ fontSize: 'clamp(1.3rem, 4vw, 2.8rem)' }}>
+          <h2
+            className="font-bold text-white leading-tight mb-2 drop-shadow-lg max-w-[95%] sm:max-w-2xl"
+            style={{ fontSize: 'clamp(1.2rem, 5vw, 3rem)' }}
+          >
             {slide.title}
           </h2>
 
-          {/* Sub */}
-          <p className="text-white/70 text-xs sm:text-sm mb-4 sm:mb-5 drop-shadow max-w-md">
+          {/* Subtitle */}
+          <p className="text-white/80 text-[11px] sm:text-sm md:text-base mb-4 sm:mb-5 drop-shadow max-w-xs sm:max-w-md md:max-w-lg leading-relaxed line-clamp-2">
             {slide.sub}
           </p>
 
           {/* CTA */}
           <a
             href={slide.ctaLink}
-            onClick={e => { e.preventDefault(); window.location.href = slide.ctaLink }}
-            className="inline-flex items-center gap-2 bg-white text-green-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm hover:bg-green-50 active:scale-95 transition-all shadow-lg"
+            onClick={e => {
+              e.preventDefault()
+              window.location.href = slide.ctaLink
+            }}
+            className="inline-flex items-center gap-2 bg-white text-green-900 font-bold px-4 py-2 sm:px-6 sm:py-3 rounded-full text-[11px] sm:text-sm hover:bg-green-50 active:scale-95 transition-all shadow-lg"
           >
             {slide.cta} →
           </a>
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Arrow buttons ─────────────────────────────────────────────────── */}
+      {/* Left Arrow */}
       <button
         onClick={prev}
-        className="absolute left-2 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/30 hover:bg-black/55 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center transition-all hover:scale-110 active:scale-90"
+        className="absolute left-2 sm:left-3 lg:left-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-11 lg:h-11 rounded-full bg-black/20 hover:bg-black/40 active:bg-black/50 backdrop-blur-sm border border-white/10 text-white transition-all duration-300 hover:scale-105 active:scale-95"
       >
-        <ChevronLeft size={18} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-2 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/30 hover:bg-black/55 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center transition-all hover:scale-110 active:scale-90"
-      >
-        <ChevronRight size={18} />
+        <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-[18px] lg:h-[18px]" />
       </button>
 
-      {/* ── Dot indicators ────────────────────────────────────────────────── */}
-      <div className="absolute bottom-3 sm:bottom-5 right-4 sm:right-8 z-20 flex items-center gap-1.5">
+      {/* Right Arrow */}
+      <button
+        onClick={next}
+        className="absolute right-2 sm:right-3 lg:right-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-11 lg:h-11 rounded-full bg-black/20 hover:bg-black/40 active:bg-black/50 backdrop-blur-sm border border-white/10 text-white transition-all duration-300 hover:scale-105 active:scale-95"
+      >
+        <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-[18px] lg:h-[18px]" />
+      </button>
+
+      {/* Dots */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 12,
+          right: 12,
+          zIndex: 20,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
+          height: 6,
+          lineHeight: 0,
+        }}
+      >
         {SLIDES.map((_, i) => (
-          <button
+          <span
             key={i}
             onClick={() => go(i, i > idx ? 1 : -1)}
-            className="transition-all duration-300 rounded-full bg-white"
+            role="button"
+            aria-label={`Go to slide ${i + 1}`}
             style={{
-              width:   i === idx ? 22 : 6,
-              height:  6,
+              display: 'inline-block',
+              width: i === idx ? 16 : 6,
+              height: 6,
+              minWidth: i === idx ? 16 : 6,
+              maxWidth: i === idx ? 16 : 6,
+              minHeight: 6,
+              maxHeight: 6,
+              borderRadius: 9999,
+              backgroundColor: 'white',
               opacity: i === idx ? 1 : 0.4,
+              transition: 'width 0.3s ease, opacity 0.3s ease',
+              flexShrink: 0,
+              alignSelf: 'center',
+              cursor: 'pointer',
+              padding: 0,
+              margin: 0,
+              boxSizing: 'content-box',
             }}
           />
         ))}
       </div>
 
-      {/* ── Slide counter ─────────────────────────────────────────────────── */}
+      {/* Counter */}
       <div className="absolute top-4 right-4 z-20 bg-black/25 backdrop-blur-sm border border-white/15 text-white/80 text-[10px] font-bold px-2.5 py-1 rounded-full hidden sm:block">
         {idx + 1} / {SLIDES.length}
       </div>
