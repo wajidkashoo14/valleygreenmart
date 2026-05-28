@@ -272,7 +272,7 @@ export default function ProfilePage() {
                         label="Phone Number"
                         icon={<Phone size={15} />}
                         type="tel"
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 77809 66909"
                         value={profileForm.phone}
                         onChange={setProfileField('phone')}
                         error={profileErrors.phone}

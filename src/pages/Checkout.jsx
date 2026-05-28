@@ -96,7 +96,7 @@ export default function Checkout() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field label="First Name" value={form.firstName} onChange={setField('firstName')} placeholder="Ahmad" />
                     <Field label="Last Name" value={form.lastName} onChange={setField('lastName')} placeholder="Mir" />
-                    <Field label="Phone" value={form.phone} onChange={setField('phone')} placeholder="+91 98765 43210" type="tel" />
+                    <Field label="Phone" value={form.phone} onChange={setField('phone')} placeholder="+91 77809 66909" type="tel" />
                     <Field label="PIN Code" value={form.pin} onChange={setField('pin')} placeholder="190001" />
                     <div className="sm:col-span-2">
                       <Field label="Address" value={form.address} onChange={setField('address')} placeholder="House No, Street, Locality" />

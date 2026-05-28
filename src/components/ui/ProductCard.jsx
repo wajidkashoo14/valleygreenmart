@@ -14,6 +14,7 @@ const BADGE_STYLES = {
   A2:         'bg-sky-600 text-white',
   Authentic:  'bg-amber-800 text-white',
   'GI Tagged':'bg-indigo-600 text-white',
+  'Pan India': 'bg-sky-600 text-white',
   default:    'bg-green-700 text-white',
 }
 

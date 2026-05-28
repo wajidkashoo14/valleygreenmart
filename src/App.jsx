@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import ScrollToTop from './components/ui/ScrollToTop'
 import { AnimatePresence } from 'framer-motion'
 import Navbar           from './components/layout/Navbar'
 import Footer           from './components/layout/Footer'
@@ -12,7 +13,12 @@ import Products      from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Cart          from './pages/Cart'
 import Wishlist      from './pages/Wishlist'
-import Checkout      from './pages/Checkout'
+import Checkout       from './pages/Checkout'
+import AboutUs        from './pages/AboutUs'
+import ShippingPolicy from './pages/ShippingPolicy'
+import ReturnPolicy   from './pages/ReturnPolicy'
+import PrivacyPolicy  from './pages/PrivacyPolicy'
+import ContactUs      from './pages/ContactUs'
 
 // Auth pages (no Navbar/Footer/WhatsApp on these)
 import LoginPage          from './pages/auth/LoginPage'
@@ -28,6 +34,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col min-h-screen bg-cream font-body">
+      <ScrollToTop />
       {!isAuthPage && <Navbar />}
 
       <main className="flex-1">
@@ -45,6 +52,12 @@ export default function App() {
 
             <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             <Route path="/profile"  element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+
+            <Route path="/about"           element={<AboutUs />} />
+            <Route path="/shipping-policy"  element={<ShippingPolicy />} />
+            <Route path="/return-policy"    element={<ReturnPolicy />} />
+            <Route path="/privacy-policy"   element={<PrivacyPolicy />} />
+            <Route path="/contact"          element={<ContactUs />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

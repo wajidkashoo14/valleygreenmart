@@ -5,20 +5,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-# Dependencies
+# Dependency directories
 node_modules
-.pnp
-.pnp.js
 
 # Build output
 dist
-dist-ssr
-*.local
+build
 
-# Vite cache
+# Vite files
 .vite
+
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*
@@ -31,37 +32,38 @@ dist-ssr
 *.sln
 *.sw?
 
-# Testing
+# Coverage directory
 coverage
-*.lcov
 
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# Temporary files
-*.tmp
-*.temp
+# Cache
 .cache
+.parcel-cache
 
-# TypeScript
+# TypeScript cache
 *.tsbuildinfo
 
-# Optional: Tailwind CSS generated files (if not using JIT or if output is committed)
-# If you generate CSS separately and commit it, you might want to ignore source maps
-*.css.map
+# ESLint cache
+.eslintcache
 
-# Optional: Lock files (uncomment if you don't want to commit them)
+# Temporary files
+tmp
+temp
+
+# OS generated files
+Thumbs.db
+
+# Netlify
+.netlify
+
+# Vercel
+.vercel
+
+# Firebase
+.firebase
+
+# Optional package manager lock files
+# Uncomment based on your package manager preference
+
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
-
-# macOS
-.AppleDouble
-.LSOverride
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini

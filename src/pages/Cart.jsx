@@ -45,7 +45,7 @@ export default function Cart() {
           <span className="bg-green-100 text-green-700 text-sm font-semibold px-3 py-1 rounded-full">{cartProducts.length} item{cartProducts.length > 1 ? 's' : ''}</span>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_380px] gap-6">
+        <div className="grid lg:grid-cols-[1fr_360px] gap-4 sm:gap-6">
           {/* Cart items */}
           <div className="bg-white rounded-2xl border border-green-100 shadow-card overflow-hidden">
             <AnimatePresence>
@@ -57,7 +57,7 @@ export default function Cart() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20, height: 0, paddingTop: 0, paddingBottom: 0 }}
                   transition={{ duration: 0.25 }}
-                  className={`flex items-center gap-4 p-4 sm:p-5 ${i < cartProducts.length - 1 ? 'border-b border-green-50' : ''}`}
+                  className={`flex items-center gap-3 p-3 sm:gap-4 sm:p-5 ${i < cartProducts.length - 1 ? 'border-b border-green-50' : ''}`}
                 >
                   <Link to={`/products/${product.id}`} className="w-20 h-20 rounded-xl overflow-hidden bg-green-50 flex-shrink-0 border border-green-100 hover:opacity-90 transition-opacity">
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover" />

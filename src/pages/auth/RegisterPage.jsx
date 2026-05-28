@@ -214,7 +214,7 @@ export default function RegisterPage() {
                   label="Full Name"
                   icon={<User size={15} />}
                   type="text"
-                  placeholder="Name"
+                  placeholder="Ahmad Mir"
                   value={form.name}
                   onChange={setField('name')}
                   error={errors.name}
@@ -238,7 +238,7 @@ export default function RegisterPage() {
                   label="Phone Number (optional)"
                   icon={<Phone size={15} />}
                   type="tel"
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 77809 66909"
                   value={form.phone}
                   onChange={setField('phone')}
                   error={errors.phone}
