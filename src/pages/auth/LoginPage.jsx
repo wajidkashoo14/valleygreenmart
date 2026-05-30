@@ -6,6 +6,7 @@ import { useAuthStore } from '../../store/authStore'
 import { useToastStore } from '../../store/toastStore'
 import AuthField from '../../components/auth/AuthField'
 
+
 const SIDE_IMAGES = [
   { url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=900&q=88&auto=format&fit=crop', caption: 'Hand-picked Kashmiri Saffron — the world\'s finest' },
   { url: 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?w=900&q=88&auto=format&fit=crop', caption: 'Wild forest honey from the Gurez Valley' },
@@ -20,12 +21,14 @@ export default function LoginPage() {
   const [imgIdx, setImgIdx]     = useState(0)
   const emailRef                = useRef(null)
 
+
   const { login, loginWithGoogle, isLoading, error, clearError, isLoggedIn } = useAuthStore()
   const toast    = useToastStore()
   const navigate = useNavigate()
   const location = useLocation()
 
   const redirectTo = location.state?.from || '/'
+ 
 
   // If already logged in, redirect
   useEffect(() => { if (isLoggedIn) navigate(redirectTo, { replace: true }) }, [isLoggedIn]) // eslint-disable-line
