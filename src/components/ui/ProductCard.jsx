@@ -1,21 +1,22 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Heart, ShoppingCart, Star, MapPin, Check } from 'lucide-react'
+import { Heart, ShoppingCart, Star, MapPin, Check, Calendar } from 'lucide-react'
 import { useCart, useWishlist } from '../../hooks'
 import { formatPrice, getDiscount } from '../../utils'
 
 const BADGE_STYLES = {
-  Premium:    'bg-amber-500 text-white',
-  Bestseller: 'bg-green-700 text-white',
-  New:        'bg-sky-500 text-white',
-  Rare:       'bg-purple-600 text-white',
-  Gift:       'bg-rose-500 text-white',
-  A2:         'bg-sky-600 text-white',
-  Authentic:  'bg-amber-800 text-white',
-  'GI Tagged':'bg-indigo-600 text-white',
-  'Pan India': 'bg-sky-600 text-white',
-  default:    'bg-green-700 text-white',
+  Premium:       'bg-amber-500 text-white',
+  Bestseller:    'bg-green-700 text-white',
+  New:           'bg-sky-500 text-white',
+  Rare:          'bg-purple-600 text-white',
+  Gift:          'bg-rose-500 text-white',
+  A2:            'bg-sky-600 text-white',
+  Authentic:     'bg-amber-800 text-white',
+  'GI Tagged':   'bg-indigo-600 text-white',
+  'Pan India':   'bg-sky-600 text-white',
+  'Coming Soon': 'bg-zinc-600 text-white',
+  default:       'bg-green-700 text-white',
 }
 
 export default function ProductCard({ product, index = 0 }) {
@@ -27,11 +28,13 @@ export default function ProductCard({ product, index = 0 }) {
   const { toggle, has }    = useWishlist()
   const wished             = has(product.id)
   const discount           = getDiscount(product.price, product.originalPrice)
-  const badgeClass         = BADGE_STYLES[product.badge] ?? BADGE_STYLES.default
+  const activeBadge        = product.comingSoon ? 'Coming Soon' : product.badge
+  const badgeClass         = BADGE_STYLES[activeBadge] ?? BADGE_STYLES.default
 
   const handleAddToCart = (e) => {
     e.preventDefault()
     e.stopPropagation()
+    if (product.comingSoon) return
     addToCart(product.id, 1, product.name)
     setJustAdded(true)
     setTimeout(() => setJustAdded(false), 1600)
@@ -48,7 +51,7 @@ export default function ProductCard({ product, index = 0 }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-      whileHover={{ y: -4 }}
+      whileHover={product.comingSoon ? {} : { y: -4 }}
       className="h-full"
     >
       <Link to={`/products/${product.id}`} className="group block h-full">
@@ -57,15 +60,11 @@ export default function ProductCard({ product, index = 0 }) {
           style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
         >
 
-          {/* ── Image — uses aspect ratio, fully fluid ─────────────────────── */}
+          {/* ── Image ───────────────────────────────────────────────────── */}
           <div className="relative overflow-hidden bg-gradient-to-br from-green-50 to-green-100/40 aspect-[4/3]">
 
-            {/* Skeleton */}
-            {!imgLoaded && !imgError && (
-              <div className="absolute inset-0 skeleton" />
-            )}
+            {!imgLoaded && !imgError && <div className="absolute inset-0 skeleton" />}
 
-            {/* Image */}
             {!imgError ? (
               <img
                 src={product.image}
@@ -75,7 +74,7 @@ export default function ProductCard({ product, index = 0 }) {
                 onError={() => setImgError(true)}
                 className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                   imgLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
+                } ${product.comingSoon ? 'grayscale-[30%] opacity-80' : ''}`}
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-green-50 to-green-100">
@@ -84,24 +83,25 @@ export default function ProductCard({ product, index = 0 }) {
               </div>
             )}
 
-            {/* Hover gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            {!product.comingSoon && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            )}
 
-            {/* ── Badges top-left ─────────────────────────────────────────── */}
+            {/* Badges */}
             <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
-              {product.badge && (
+              {activeBadge && (
                 <span className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wide shadow-sm ${badgeClass}`}>
-                  {product.badge}
+                  {activeBadge}
                 </span>
               )}
-              {discount && (
+              {discount && !product.comingSoon && (
                 <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-red-500 text-white shadow-sm">
                   −{discount}%
                 </span>
               )}
             </div>
 
-            {/* ── Wishlist — always visible (important for mobile) ─────────── */}
+            {/* Wishlist */}
             <button
               onClick={handleWishlist}
               aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
@@ -115,28 +115,36 @@ export default function ProductCard({ product, index = 0 }) {
               <Heart size={14} className="hidden sm:block" fill={wished ? 'currentColor' : 'none'} strokeWidth={2} />
             </button>
 
-            {/* ── Add to cart bar — slides up on hover (desktop) ──────────── */}
-            {/* Hidden on mobile — they use the bottom + button instead */}
+            {/* Add to cart hover bar — desktop only */}
             <div className="absolute bottom-0 left-0 right-0 z-10 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out hidden sm:block">
               <button
                 onClick={handleAddToCart}
+                disabled={product.comingSoon}
                 className={`w-full py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all duration-200 shadow-lg ${
-                  justAdded
+                  product.comingSoon
+                    ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed shadow-none'
+                    : justAdded
                     ? 'bg-green-500 text-white'
                     : 'bg-white text-green-800 hover:bg-green-800 hover:text-white'
                 }`}
               >
-                <AnimatePresence mode="wait">
-                  {justAdded ? (
+                {product.comingSoon ? (
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={13} /> Coming Soon
+                  </span>
+                ) : justAdded ? (
+                  <AnimatePresence mode="wait">
                     <motion.span key="added" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
                       <Check size={13} strokeWidth={3} /> Added!
                     </motion.span>
-                  ) : (
+                  </AnimatePresence>
+                ) : (
+                  <AnimatePresence mode="wait">
                     <motion.span key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
                       <ShoppingCart size={13} /> Add to Cart
                     </motion.span>
-                  )}
-                </AnimatePresence>
+                  </AnimatePresence>
+                )}
               </button>
             </div>
           </div>
@@ -158,26 +166,14 @@ export default function ProductCard({ product, index = 0 }) {
               {product.name}
             </h3>
 
-            {/* Stars — compact on mobile */}
+            {/* Stars */}
             <div className="flex items-center gap-1 mb-2 sm:mb-3">
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={9}
-                    className={`sm:hidden ${
-                      i < Math.floor(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'
-                    }`}
-                  />
+                  <Star key={i} size={9} className={`sm:hidden ${i < Math.floor(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}`} />
                 ))}
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={11}
-                    className={`hidden sm:block ${
-                      i < Math.floor(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'
-                    }`}
-                  />
+                  <Star key={i} size={11} className={`hidden sm:block ${i < Math.floor(product.rating) ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}`} />
                 ))}
               </div>
               <span className="text-[9px] sm:text-[10px] text-green-400 font-medium">
@@ -186,62 +182,80 @@ export default function ProductCard({ product, index = 0 }) {
               </span>
             </div>
 
-            {/* Push price to bottom */}
             <div className="flex-1" />
 
-            {/* ── Price + CTA ─────────────────────────────────────────────── */}
+            {/* ── Price + CTA row ──────────────────────────────────────────── */}
             <div className="flex items-center justify-between gap-1 mt-1">
+
+              {/* Left: price or coming soon pill */}
               <div className="min-w-0">
-                <div className="flex items-baseline gap-1 flex-wrap">
-                  <span className="text-[13px] sm:text-[15px] font-bold text-green-900 leading-none">
-                    {formatPrice(product.price)}
+                {product.comingSoon ? (
+                  <span className="text-[10px] sm:text-xs font-semibold text-green-600 bg-green-50 border border-green-200 px-2 py-1 rounded-lg inline-block">
+                    Available Soon
                   </span>
-                  {product.originalPrice && (
-                    <span className="text-[9px] sm:text-[11px] text-green-300 line-through leading-none">
-                      {formatPrice(product.originalPrice)}
+                ) : (
+                  <>
+                    <div className="flex items-baseline gap-1 flex-wrap">
+                      <span className="text-[13px] sm:text-[15px] font-bold text-green-900 leading-none">
+                        {formatPrice(product.price)}
+                      </span>
+                      {product.originalPrice && (
+                        <span className="text-[9px] sm:text-[11px] text-green-300 line-through leading-none">
+                          {formatPrice(product.originalPrice)}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[8px] sm:text-[10px] text-green-400 mt-0.5 block truncate">
+                      {product.unit}
                     </span>
-                  )}
-                </div>
-                <span className="text-[8px] sm:text-[10px] text-green-400 mt-0.5 block truncate">
-                  {product.unit}
-                </span>
+                  </>
+                )}
               </div>
 
-              {/* Add button — always visible on mobile, also on desktop */}
+              {/* Right: add button */}
               <motion.button
-                whileTap={{ scale: 0.85 }}
+                whileTap={product.comingSoon ? {} : { scale: 0.85 }}
                 onClick={handleAddToCart}
-                aria-label="Add to cart"
-                className={`flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold transition-all duration-200 active:scale-90 ${
-                  justAdded
-                    ? 'bg-green-500 text-white'
-                    : 'bg-green-100 text-green-800 hover:bg-green-800 hover:text-white'
+                disabled={product.comingSoon}
+                aria-label={product.comingSoon ? 'Coming soon' : 'Add to cart'}
+                className={`flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold transition-all duration-200 ${
+                  product.comingSoon
+                    ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
+                    : justAdded
+                    ? 'bg-green-500 text-white active:scale-90'
+                    : 'bg-green-100 text-green-800 hover:bg-green-800 hover:text-white active:scale-90'
                 }`}
               >
-                {justAdded
-                  ? <Check size={12} strokeWidth={3} className="sm:hidden" />
-                  : <span className="text-base leading-none sm:hidden">+</span>
-                }
-                {justAdded
-                  ? <Check size={14} strokeWidth={3} className="hidden sm:block" />
-                  : <span className="text-lg leading-none hidden sm:block">+</span>
-                }
+                {product.comingSoon ? (
+                  <>
+                    <Calendar size={11} className="sm:hidden" />
+                    <Calendar size={13} className="hidden sm:block" />
+                  </>
+                ) : justAdded ? (
+                  <>
+                    <Check size={12} strokeWidth={3} className="sm:hidden" />
+                    <Check size={14} strokeWidth={3} className="hidden sm:block" />
+                  </>
+                ) : (
+                  <>
+                    <span className="text-base leading-none sm:hidden">+</span>
+                    <span className="text-lg leading-none hidden sm:block">+</span>
+                  </>
+                )}
               </motion.button>
             </div>
 
-            {/* Tags — only on larger screens, they clutter small cards */}
-            {product.tags?.length > 0 && (
+            {/* Tags — desktop only */}
+            {!product.comingSoon && product.tags?.length > 0 && (
               <div className="hidden sm:flex gap-1.5 mt-2.5 flex-wrap">
                 {product.tags.slice(0, 2).map(tag => (
-                  <span
-                    key={tag}
-                    className="text-[9px] font-semibold text-green-600 bg-green-50 border border-green-100 px-1.5 py-0.5 rounded-full uppercase tracking-wide"
-                  >
+                  <span key={tag} className="text-[9px] font-semibold text-green-600 bg-green-50 border border-green-100 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
                     {tag}
                   </span>
                 ))}
               </div>
             )}
+
           </div>
         </div>
       </Link>

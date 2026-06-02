@@ -21,11 +21,8 @@ const TABS = [
   { key: 'account',  label: 'Account',          icon: <Shield size={15} /> },
 ]
 
-const MOCK_ORDERS = [
-  { id: 'VGM-2841', date: '2 May 2025',  status: 'Delivered', total: 5920, items: ['Kashmir Saffron (1g)', 'Wild Forest Honey (500g)'] },
-  { id: 'VGM-2790', date: '18 Apr 2025', status: 'Delivered', total: 1630, items: ['Kashmiri Walnuts (500g)', 'Desi Cow A2 Ghee (500ml)'] },
-  { id: 'VGM-2712', date: '3 Apr 2025',  status: 'Delivered', total: 2400, items: ['Premium Dry Fruit Wedding Box'] },
-]
+const MOCK_ORDERS = []
+
 
 const STATUS_STYLE = {
   Delivered:  'bg-green-100 text-green-700',

@@ -91,6 +91,7 @@ export const PRODUCTS = [
     desc: 'World-renowned Kashmiri Kesar, hand-picked from the saffron fields of Pampore. Intensely aromatic with deep crimson threads. ISO certified and lab-tested for purity. Each strand is hand-harvested during the brief autumn bloom — the most prized spice in the world.',
     tags: ['Organic', 'Premium', 'GI Tagged', 'Lab Tested'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 2. Kashmiri Walnuts ───────────────────────────────────────────────────
@@ -110,6 +111,7 @@ export const PRODUCTS = [
     desc: 'Thin-shelled Kagzi walnuts from the legendary orchards of Shopian. Plump, buttery kernels rich in Omega-3 and antioxidants. Naturally sun-dried and freshly cracked to order.',
     tags: ['Organic', 'Omega-3 Rich', 'Thin Shell', 'Sun-dried'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 3. Wild Forest Honey ──────────────────────────────────────────────────
@@ -129,6 +131,7 @@ export const PRODUCTS = [
     desc: 'Raw unfiltered honey from wild Himalayan bees in the forests of Gurez Valley. Thick, golden, with floral notes of mountain wildflowers. No heating, no filtering, no added sugars.',
     tags: ['Raw', 'Unfiltered', 'Wildcrafted', 'No Added Sugar'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 4. Baby Spinach Microgreens ───────────────────────────────────────────
@@ -148,6 +151,7 @@ export const PRODUCTS = [
     desc: 'Tender microgreens grown hydroponically under LED lighting. Harvested at 7–14 days for peak nutritional density — up to 40x more vitamins than mature spinach. Cut and packed fresh every morning.',
     tags: ['Hydroponic', 'Harvested Daily', 'Superfood'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 5. Kashmiri Almonds (Mamra) ───────────────────────────────────────────
@@ -167,6 +171,7 @@ export const PRODUCTS = [
     desc: 'Authentic Mamra almonds — smaller, richer and more aromatic than California almonds. Prized across South Asia for medicinal properties and intense flavour. The gold standard of almonds.',
     tags: ['Authentic', 'Premium', 'GI Tagged', 'Medicinal'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 6. Pure Shilajit Resin ────────────────────────────────────────────────
@@ -186,6 +191,7 @@ export const PRODUCTS = [
     desc: 'Genuine Himalayan Shilajit in purest resin form. Collected above 3,500m, purified using traditional water-washing methods and lab-tested for heavy metals. Contains 85+ minerals and fulvic acid.',
     tags: ['Lab Tested', 'Pure Resin', 'Ayurvedic', '85+ Minerals'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 7. Fresh Kashmiri Apples ──────────────────────────────────────────────
@@ -205,6 +211,7 @@ export const PRODUCTS = [
     desc: "Crisp, sweet-tart apples from Sopore — Asia's largest apple market. Grown at high altitude in cool mountain air. No artificial ripening, no wax coating. Varieties: Royal Delicious, Golden Delicious, Maharaji.",
     tags: ['Seasonal', 'No Wax', 'No Artificial Ripening', 'High Altitude'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 8. Fresh Leafy Greens Basket ─────────────────────────────────────────
@@ -224,6 +231,7 @@ export const PRODUCTS = [
     desc: 'Seasonal leafy greens hand-bundled each morning from certified organic farms. Rotating selection includes spinach, fenugreek, mustard greens, radish greens and local Haak. Washed and cold-packed.',
     tags: ['Mixed', 'Seasonal', 'Morning Fresh', 'Certified Organic'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 9. Kashmiri Pickle Combo ──────────────────────────────────────────────
@@ -243,6 +251,7 @@ export const PRODUCTS = [
     desc: 'Three beloved Kashmiri pickles — Lehsun Achar (Garlic), Mixed Veg Achar, and Alucha Achar (Wild Plum). Made in small batches by artisan families using heirloom recipes. No artificial preservatives or colours.',
     tags: ['Traditional', 'No Preservatives', 'Artisan', 'Small Batch'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 10. Premium Dry Fruit Wedding Box ─────────────────────────────────────
@@ -262,6 +271,7 @@ export const PRODUCTS = [
     desc: 'Luxuriously curated gift box with Mamra almonds, Kagzi walnuts, pistachios, dried apricots and a vial of saffron. Hand-packed in premium kraft-and-wood packaging. Perfect for weddings, Eid and festive gifting.',
     tags: ['Gift Ready', 'Premium', 'Curated', 'Festive', 'Wedding'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 11. Wild Kanguch Mushrooms ────────────────────────────────────────────
@@ -281,6 +291,7 @@ export const PRODUCTS = [
     desc: 'Prized Kanguch — Kashmiri wild Morel mushrooms with deep honeycomb texture and intensely earthy aroma. Handpicked from Dachigam National Park forests during the brief spring window. A celebrated Wazwan ingredient.',
     tags: ['Wild Foraged', 'Seasonal', 'Rare', 'Handpicked'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 12. Dried Apricots (Khubani) ─────────────────────────────────────────
@@ -300,6 +311,7 @@ export const PRODUCTS = [
     desc: 'Sun-dried apricots from high-altitude orchards of Kargil at 2,700m. Naturally sweet with a fruity tang. Mountain sun concentrates natural sugars during drying. Zero sulfites, zero preservatives.',
     tags: ['Sun-dried', 'No Sulfites', 'No Preservatives', 'High Altitude'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 13. Desi Cow A2 Ghee ─────────────────────────────────────────────────
@@ -319,6 +331,7 @@ export const PRODUCTS = [
     desc: 'Hand-churned A2 ghee from native desi cows on Himalayan pastures. Made using the ancient bilona method — curd churned to butter then slow-cooked on wood fire. Deep amber, nutty aroma, grainy texture that confirms purity.',
     tags: ['A2 Milk', 'Bilona Churned', 'Traditional', 'Grassfed'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 14. Seasonal Fruit Basket ─────────────────────────────────────────────
@@ -338,6 +351,7 @@ export const PRODUCTS = [
     desc: "Curated basket of the season's finest Kashmir fruits — currently pears (Nakh), cherries, Santa Rosa plums and Kashmiri grapes. Hand-selected from multiple orchards, inspected individually for peak ripeness.",
     tags: ['Seasonal', 'Hand-selected', 'Multi-orchard'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 15. Pistachio (Pista) ─────────────────────────────────────────────────
@@ -357,6 +371,7 @@ export const PRODUCTS = [
     desc: 'Plump, vibrantly green pistachios with natural split shells. Lightly roasted in-house with Himalayan pink salt. No artificial flavouring, no dyes, no preservatives. Natural split confirms perfect harvest ripeness.',
     tags: ['Natural Roast', 'Premium', 'Himalayan Salt'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 16. Kashmiri Chilli (Degchi Mirch) ───────────────────────────────────
@@ -376,6 +391,7 @@ export const PRODUCTS = [
     desc: "Iconic Kashmiri Degchi Mirch — brilliant red, mild heat. Secret behind the vivid colour of Rogan Josh and Wazwan. Sun-dried on the vine then stone-ground in-house to preserve natural oils and colour. GI certified.",
     tags: ['GI Tagged', 'Sun-dried', 'Mild Heat', 'Intense Colour'],
     featured: true,
+    comingSoon: true,
   },
 
   // ── 17. Organic Haak (Kashmir Greens) ────────────────────────────────────
@@ -395,6 +411,7 @@ export const PRODUCTS = [
     desc: 'Haak is the soul of Kashmiri cuisine — a hearty leafy green from the mustard family. Slightly bitter, minerally taste. Cooked simply in mustard oil with garlic and whole spices — a daily Kashmiri staple. Organically grown in Budgam, harvested at dawn.',
     tags: ['Organic', 'Iron Rich', 'Daily Harvest', 'Kashmiri Staple'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── 18. Kashmiri Wazwan Spice Blend ──────────────────────────────────────
@@ -414,6 +431,7 @@ export const PRODUCTS = [
     desc: 'Authentic Wazwan spice blend used by Kashmiri master chefs (Wazas) — fennel, dry ginger, cardamom, cinnamon, cloves and black cumin. Stone-ground fresh in small batches and sealed immediately to lock in volatile oils.',
     tags: ['Traditional', 'Stone-ground', 'Aromatic', 'Small Batch'],
     featured: false,
+    comingSoon: true,
   },
 
   // ── PAN INDIA PRODUCTS (from Pricing.xlsx) ────────────────────────────────

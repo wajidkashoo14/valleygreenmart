@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 const SLIDES = [
   {
     id: 1,
-    url: 'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=1600&q=92&auto=format&fit=crop',
+    url: '/hero/safron.jfif',
     title: 'Saffron Fields of Pampore',
     sub: 'Pampore, Kashmir — The Saffron Capital',
     tag: '🌸 Kashmir Kesar · GI Tagged',
@@ -15,7 +15,7 @@ const SLIDES = [
   },
   {
     id: 2,
-    url: 'https://images.unsplash.com/photo-1566296314736-6eaac1ca0cb9?w=1600&q=92&auto=format&fit=crop',
+    url: '/hero/dallake.jfif',
     title: 'Dal Lake Floating Market',
     sub: 'Srinagar, Kashmir — Dawn vegetable market on water',
     tag: '🚣 Fresh Produce · Harvested Daily',
@@ -25,7 +25,7 @@ const SLIDES = [
   },
   {
     id: 3,
-    url: 'https://images.unsplash.com/photo-1604548737895-dc44b1e1ef39?w=1600&q=92&auto=format&fit=crop',
+    url: '/hero/walnut.avif',
     title: 'Walnut Orchards of Shopian',
     sub: 'Shopian, Kashmir — Walnut Capital of Asia',
     tag: '🥜 Kagzi Walnuts · Omega-3 Rich',
@@ -35,7 +35,7 @@ const SLIDES = [
   },
   {
     id: 4,
-    url: 'https://images.unsplash.com/photo-1554435493-93422e8220c8?w=1600&q=92&auto=format&fit=crop',
+    url: '/hero/himaliya.jfif',
     title: 'Valley Farms in the Himalayas',
     sub: 'Kashmir Valley — 1,800m above sea level',
     tag: '🏔️ Organic Farming · NPOP Certified',
@@ -45,17 +45,17 @@ const SLIDES = [
   },
   {
     id: 5,
-    url: 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?w=1600&q=92&auto=format&fit=crop',
+    url: '/hero/honey.webp',
     title: 'Wild Himalayan Honey',
     sub: 'Gurez Valley — Raw & unfiltered forest harvest',
     tag: '🍯 Wild Honey · No Added Sugar',
     cta: 'Shop Honey',
-    ctaLink: '/products?category=Honey',
+    ctaLink: './products?category=Honey',
     color: 'from-yellow-950/85 via-yellow-900/40',
   },
   {
     id: 6,
-    url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1600&q=92&auto=format&fit=crop',
+    url: '/hero/puresafron.webp',
     title: 'Pure Kashmir Saffron (Kesar)',
     sub: 'Pampore · ISO Certified · Lab Tested',
     tag: "✨ World's Finest Spice",
