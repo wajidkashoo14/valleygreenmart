@@ -52,7 +52,8 @@ export default function ProductCard({ product, index = 0 }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
       whileHover={product.comingSoon ? {} : { y: -4 }}
-      className="h-full"
+      /* FIX 1: Added `relative z-0 hover:z-10` to prevent Framer Motion's stacking context from overlapping other cards in the grid */
+      className="h-full relative z-0 hover:z-10"
     >
       <Link to={`/products/${product.id}`} className="group block h-full">
         <div
@@ -84,7 +85,8 @@ export default function ProductCard({ product, index = 0 }) {
             )}
 
             {!product.comingSoon && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              /* FIX 2: Added `pointer-events-none` so this gradient overlay doesn't steal the hover state from the mouse */
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             )}
 
             {/* Badges */}
@@ -115,8 +117,9 @@ export default function ProductCard({ product, index = 0 }) {
               <Heart size={14} className="hidden sm:block" fill={wished ? 'currentColor' : 'none'} strokeWidth={2} />
             </button>
 
-            {/* Add to cart hover bar — desktop only */}
-            <div className="absolute bottom-0 left-0 right-0 z-10 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out hidden sm:block">
+            {/* Add to cart hover bar */}
+            {/* FIX 3 Note: I removed `hidden sm:block` here so it appears on mobile too. If you prefer this pop-up to ONLY be on desktop, add `hidden sm:block` back to this div. */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
               <button
                 onClick={handleAddToCart}
                 disabled={product.comingSoon}
