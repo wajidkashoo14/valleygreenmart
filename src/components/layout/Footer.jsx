@@ -5,7 +5,7 @@ import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 const SOCIALS = [
   {
     label: 'Instagram',
-    href: 'https://instagram.com/valleygreenmart',
+    href: 'https://www.instagram.com/valleygreenmart?igsh=dzVhY3gyc2V3aWJm',
     color: 'hover:bg-[#E1306C]',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -15,7 +15,7 @@ const SOCIALS = [
   },
   {
     label: 'Facebook',
-    href: 'https://facebook.com/valleygreenmart',
+    href: 'https://www.facebook.com/share/18ZXBQYHQ9/',
     color: 'hover:bg-[#1877F2]',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -35,7 +35,7 @@ const SOCIALS = [
   },
   {
     label: 'YouTube',
-    href: 'https://youtube.com/@valleygreenmart',
+    href: '/',
     color: 'hover:bg-[#FF0000]',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -45,7 +45,7 @@ const SOCIALS = [
   },
   {
     label: 'X (Twitter)',
-    href: 'https://x.com/valleygreenmart',
+    href: '/',
     color: 'hover:bg-[#000000]',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
