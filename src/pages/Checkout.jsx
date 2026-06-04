@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, MapPin, CreditCard, Truck, Check, ShoppingBag, Tag } from 'lucide-react'
+import { ChevronRight, MapPin, CreditCard, Truck, Check, ShoppingBag, AlertCircle } from 'lucide-react'
 import { useCart } from '../hooks'
 import { useAuthStore } from '../store/authStore'
 import { useToastStore } from '../store/toastStore'
@@ -10,20 +10,61 @@ import PageWrapper from '../components/ui/PageWrapper'
 
 const STEPS = ['Address', 'Payment', 'Review']
 
+const PAYMENT_METHODS = [
+  { id: 'cod',     label: 'Cash on Delivery', icon: '💵', sub: 'Pay when your order arrives',    available: true  },
+  { id: 'upi',     label: 'UPI',              icon: '📱', sub: 'GPay, PhonePe, Paytm & more',    available: false },
+  { id: 'card',    label: 'Debit / Credit Card', icon: '💳', sub: 'Visa, Mastercard, RuPay',      available: false },
+  { id: 'netbank', label: 'Net Banking',       icon: '🏦', sub: 'All major banks supported',      available: false },
+]
+
 export default function Checkout() {
-  const [step, setStep] = useState(0)
-  const [placing, setPlacing] = useState(false)
-  const [placed, setPlaced] = useState(false)
+  const [step,     setStep]     = useState(0)
+  const [placing,  setPlacing]  = useState(false)
+  const [placed,   setPlaced]   = useState(false)
   const [payMethod, setPayMethod] = useState('cod')
-  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', address: '', city: 'Srinagar', pin: '', state: 'Jammu & Kashmir' })
+  const [errors,   setErrors]   = useState({})
 
-  const { cartProducts, subtotal, delivery, total, discountAmt, coupon, clearCart } = useCart()
-  const { user } = useAuthStore()
-  const toast = useToastStore()
-  const navigate = useNavigate()
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName:  '',
+    phone:     '',
+    address:   '',
+    city:      'Srinagar',
+    pin:       '',
+    state:     'Jammu & Kashmir',
+  })
 
-  const setField = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
+  const { cartProducts, subtotal, delivery, total, discountAmt, clearCart } = useCart()
+  const { user }  = useAuthStore()
+  const toast     = useToastStore()
+  const navigate  = useNavigate()
 
+  const setField = k => e => {
+    setForm(f => ({ ...f, [k]: e.target.value }))
+    // Clear error on type
+    if (errors[k]) setErrors(er => { const n = { ...er }; delete n[k]; return n })
+  }
+
+  // ── Validation ──────────────────────────────────────────────────────────────
+  const validateAddress = () => {
+    const e = {}
+    if (!form.firstName.trim())                          e.firstName = 'First name is required'
+    if (!form.lastName.trim())                           e.lastName  = 'Last name is required'
+    if (!form.phone.trim())                              e.phone     = 'Phone number is required'
+    else if (!/^[+\d][\d\s\-]{8,14}$/.test(form.phone)) e.phone     = 'Enter a valid phone number'
+    if (!form.address.trim())                            e.address   = 'Address is required'
+    if (!form.city.trim())                               e.city      = 'City is required'
+    if (!form.pin.trim())                                e.pin       = 'PIN code is required'
+    else if (!/^\d{6}$/.test(form.pin))                  e.pin       = 'Enter a valid 6-digit PIN'
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  const handleContinueToPayment = () => {
+    if (validateAddress()) setStep(1)
+  }
+
+  // ── Place order ─────────────────────────────────────────────────────────────
   const handlePlaceOrder = async () => {
     setPlacing(true)
     await new Promise(r => setTimeout(r, 1600))
@@ -34,6 +75,7 @@ export default function Checkout() {
     setTimeout(() => navigate('/'), 3000)
   }
 
+  // ── Order placed screen ──────────────────────────────────────────────────────
   if (placed) return (
     <PageWrapper>
       <div className="max-w-md mx-auto px-4 py-16 sm:py-24 text-center">
@@ -54,6 +96,7 @@ export default function Checkout() {
   return (
     <PageWrapper>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+
         {/* Header + stepper */}
         <div className="mb-8">
           <h1 className="font-display font-bold text-2xl text-green-900 mb-5 flex items-center gap-2">
@@ -67,9 +110,9 @@ export default function Checkout() {
                   className={`flex items-center gap-2 text-sm font-medium transition-colors ${i <= step ? 'text-green-800' : 'text-green-300'}`}
                 >
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                    i < step ? 'bg-green-600 text-white' :
-                    i === step ? 'bg-green-800 text-white ring-4 ring-green-200' :
-                    'bg-green-100 text-green-400'
+                    i < step    ? 'bg-green-600 text-white' :
+                    i === step  ? 'bg-green-800 text-white ring-4 ring-green-200' :
+                                  'bg-green-100 text-green-400'
                   }`}>
                     {i < step ? <Check size={12} strokeWidth={3} /> : i + 1}
                   </div>
@@ -83,74 +126,129 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_360px] gap-6">
-          {/* Form */}
-          <div className="bg-white rounded-2xl border border-green-100 shadow-card overflow-hidden">
+        <div className="grid lg:grid-cols-[1fr_360px] gap-4 sm:gap-6">
+
+          {/* ── Form panel ──────────────────────────────────────────────────── */}
+          <div className="bg-white rounded-2xl border border-green-100 shadow-sm overflow-hidden">
             <AnimatePresence mode="wait">
+
+              {/* Step 0 — Address */}
               {step === 0 && (
-                <motion.div key="addr" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }} className="p-6">
+                <motion.div key="addr" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }} className="p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-5">
                     <MapPin size={18} className="text-green-600" />
                     <h2 className="font-semibold text-green-900">Delivery Address</h2>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Field label="First Name" value={form.firstName} onChange={setField('firstName')} placeholder="Ahmad" />
-                    <Field label="Last Name" value={form.lastName} onChange={setField('lastName')} placeholder="Mir" />
-                    <Field label="Phone" value={form.phone} onChange={setField('phone')} placeholder="+91 77809 66909" type="tel" />
-                    <Field label="PIN Code" value={form.pin} onChange={setField('pin')} placeholder="190001" />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <Field label="First Name *"  value={form.firstName} onChange={setField('firstName')} placeholder="Ahmad"           error={errors.firstName} />
+                    <Field label="Last Name *"   value={form.lastName}  onChange={setField('lastName')}  placeholder="Mir"             error={errors.lastName} />
+                    <Field label="Phone *"       value={form.phone}     onChange={setField('phone')}     placeholder="+91 77809 66909" error={errors.phone} type="tel" />
+                    <Field label="PIN Code *"    value={form.pin}       onChange={setField('pin')}       placeholder="190003"          error={errors.pin} maxLength={6} />
                     <div className="sm:col-span-2">
-                      <Field label="Address" value={form.address} onChange={setField('address')} placeholder="House No, Street, Locality" />
+                      <Field label="Address *" value={form.address} onChange={setField('address')} placeholder="House No, Street, Locality" error={errors.address} />
                     </div>
-                    <Field label="City" value={form.city} onChange={setField('city')} placeholder="Srinagar" />
+                    <Field label="City *" value={form.city} onChange={setField('city')} placeholder="Srinagar" error={errors.city} />
                     <div>
                       <label className="block text-xs font-semibold text-green-700 mb-1.5">State</label>
-                      <select value={form.state} onChange={setField('state')} className="w-full px-3 py-2.5 border border-green-200 rounded-xl text-sm text-green-900 focus:outline-none focus:border-green-400 bg-white font-body">
+                      <select
+                        value={form.state}
+                        onChange={setField('state')}
+                        className="w-full px-3 py-2.5 border border-green-200 rounded-xl text-sm text-green-900 focus:outline-none focus:border-green-400 bg-white font-body"
+                      >
                         <option>Jammu &amp; Kashmir</option>
                         <option>Delhi</option>
                         <option>Punjab</option>
                         <option>Maharashtra</option>
+                        <option>Karnataka</option>
+                        <option>Tamil Nadu</option>
+                        <option>Uttar Pradesh</option>
+                        <option>West Bengal</option>
+                        <option>Gujarat</option>
+                        <option>Rajasthan</option>
                       </select>
                     </div>
                   </div>
-                  <button onClick={() => setStep(1)} className="mt-6 w-full sm:w-auto flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-md">
+
+                  <button
+                    onClick={handleContinueToPayment}
+                    className="mt-6 w-full sm:w-auto flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-md"
+                  >
                     Continue to Payment <ChevronRight size={15} />
                   </button>
                 </motion.div>
               )}
 
+              {/* Step 1 — Payment */}
               {step === 1 && (
-                <motion.div key="pay" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }} className="p-6">
+                <motion.div key="pay" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }} className="p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-5">
                     <CreditCard size={18} className="text-green-600" />
                     <h2 className="font-semibold text-green-900">Payment Method</h2>
                   </div>
+
                   <div className="space-y-3">
-                    {[
-                     { id: 'cod',     label: 'Cash on Delivery', icon: '💵', available: true  },
-                     { id: 'upi',     label: 'UPI',              icon: '📱', available: false },
-                     { id: 'card',    label: 'Card',             icon: '💳', available: false },
-                     { id: 'netbank', label: 'Net Banking',       icon: '🏦', available: false },
-                    ].map(m => (
+                    {PAYMENT_METHODS.map(m => (
                       <button
                         key={m.id}
-                        onClick={() => setPayMethod(m.id)}
-                        className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
-                          payMethod === m.id ? 'border-green-600 bg-green-50' : 'border-green-100 hover:border-green-300'
+                        onClick={() => m.available && setPayMethod(m.id)}
+                        disabled={!m.available}
+                        className={`relative w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${
+                          !m.available
+                            ? 'border-gray-100 bg-gray-50 cursor-not-allowed opacity-70'
+                            : payMethod === m.id
+                            ? 'border-green-600 bg-green-50'
+                            : 'border-green-100 hover:border-green-300'
                         }`}
                       >
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${payMethod === m.id ? 'bg-green-100' : 'bg-green-50'}`}>{m.emoji}</div>
-                        <div className="flex-1">
-                          <div className="font-semibold text-sm text-green-900">{m.label}</div>
-                          <div className="text-xs text-green-500">{m.sub}</div>
+                        {/* Icon */}
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 ${
+                          !m.available ? 'bg-gray-100 grayscale' : payMethod === m.id ? 'bg-green-100' : 'bg-green-50'
+                        }`}>
+                          {m.icon}
                         </div>
-                        <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 transition-all ${payMethod === m.id ? 'border-green-600 bg-green-600' : 'border-green-300'}`}>
-                          {payMethod === m.id && <div className="w-full h-full rounded-full bg-white scale-50" />}
+
+                        {/* Label + sub */}
+                        <div className="flex-1 min-w-0">
+                          <div className={`font-semibold text-sm ${!m.available ? 'text-gray-400' : 'text-green-900'}`}>
+                            {m.label}
+                          </div>
+                          <div className={`text-xs mt-0.5 ${!m.available ? 'text-gray-300' : 'text-green-500'}`}>
+                            {m.available ? m.sub : 'Coming soon'}
+                          </div>
                         </div>
+
+                        {/* Coming Soon badge */}
+                        {!m.available && (
+                          <span className="flex-shrink-0 text-[9px] font-bold bg-zinc-200 text-zinc-500 px-2 py-1 rounded-full uppercase tracking-wide">
+                            Soon
+                          </span>
+                        )}
+
+                        {/* Radio dot */}
+                        {m.available && (
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                            payMethod === m.id ? 'border-green-600 bg-green-600' : 'border-green-300'
+                          }`}>
+                            {payMethod === m.id && (
+                              <div className="w-2 h-2 rounded-full bg-white" />
+                            )}
+                          </div>
+                        )}
                       </button>
                     ))}
                   </div>
+
+                  {/* COD notice */}
+                  <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-2 text-xs text-amber-700">
+                    <Truck size={14} className="flex-shrink-0 mt-0.5" />
+                    <span>For Cash on Delivery, please keep exact change ready at the time of delivery.</span>
+                  </div>
+
                   <div className="flex gap-3 mt-6">
-                    <button onClick={() => setStep(0)} className="px-6 py-3 border border-green-200 rounded-full text-sm font-semibold text-green-700 hover:bg-green-50 transition-colors">Back</button>
+                    <button onClick={() => setStep(0)} className="px-6 py-3 border border-green-200 rounded-full text-sm font-semibold text-green-700 hover:bg-green-50 transition-colors">
+                      Back
+                    </button>
                     <button onClick={() => setStep(2)} className="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-md">
                       Review Order <ChevronRight size={15} />
                     </button>
@@ -158,11 +256,14 @@ export default function Checkout() {
                 </motion.div>
               )}
 
+              {/* Step 2 — Review */}
               {step === 2 && (
-                <motion.div key="review" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }} className="p-6">
+                <motion.div key="review" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }} className="p-5 sm:p-6">
                   <h2 className="font-semibold text-green-900 mb-5 flex items-center gap-2">
                     <Check size={18} className="text-green-600" /> Review Order
                   </h2>
+
+                  {/* Items */}
                   <div className="space-y-3 mb-6">
                     {cartProducts.map(p => (
                       <div key={p.id} className="flex items-center gap-3">
@@ -173,68 +274,113 @@ export default function Checkout() {
                           <div className="text-sm font-semibold text-green-900 truncate">{p.name}</div>
                           <div className="text-xs text-green-500">Qty: {p.qty}</div>
                         </div>
-                        <div className="font-bold text-sm text-green-800">{formatPrice(p.price * p.qty)}</div>
+                        <div className="font-bold text-sm text-green-800 flex-shrink-0">{formatPrice(p.price * p.qty)}</div>
                       </div>
                     ))}
                   </div>
-                  <div className="bg-green-50 rounded-xl p-4 text-sm space-y-2 mb-6">
-                    <div className="flex justify-between text-green-700"><span>Address</span><span className="text-right text-xs font-medium max-w-[160px]">{form.firstName} {form.lastName}, {form.address}, {form.city}</span></div>
-                    <div className="flex justify-between text-green-700"><span>Payment</span><span className="font-medium capitalize">{payMethod === 'cod' ? 'Cash on Delivery' : payMethod.toUpperCase()}</span></div>
+
+                  {/* Summary info */}
+                  <div className="bg-green-50 rounded-xl p-4 text-sm space-y-2.5 mb-6">
+                    <div className="flex justify-between gap-3">
+                      <span className="text-green-500 flex-shrink-0">Delivering to</span>
+                      <span className="text-green-900 font-medium text-right text-xs">
+                        {form.firstName} {form.lastName}, {form.address}, {form.city} — {form.pin}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-green-500">Phone</span>
+                      <span className="text-green-900 font-medium">{form.phone}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-green-500">Payment</span>
+                      <span className="text-green-900 font-medium">💵 Cash on Delivery</span>
+                    </div>
                   </div>
+
                   <div className="flex gap-3">
-                    <button onClick={() => setStep(1)} className="px-6 py-3 border border-green-200 rounded-full text-sm font-semibold text-green-700 hover:bg-green-50 transition-colors">Back</button>
+                    <button onClick={() => setStep(1)} className="px-6 py-3 border border-green-200 rounded-full text-sm font-semibold text-green-700 hover:bg-green-50 transition-colors">
+                      Back
+                    </button>
                     <motion.button
                       onClick={handlePlaceOrder}
                       disabled={placing}
                       whileTap={{ scale: 0.97 }}
                       className="flex-1 flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 text-white py-3.5 rounded-full font-semibold text-sm transition-all disabled:bg-green-400"
                     >
-                      {placing ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Place Order — {formatPrice(total)} <ChevronRight size={15} /></>}
+                      {placing
+                        ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        : <>Place Order — {formatPrice(total)} <ChevronRight size={15} /></>
+                      }
                     </motion.button>
                   </div>
                 </motion.div>
               )}
+
             </AnimatePresence>
           </div>
 
-          {/* Order summary */}
-          <div className="bg-white rounded-2xl border border-green-100 shadow-card p-5 h-fit sticky top-24">
+          {/* ── Order summary sidebar ────────────────────────────────────────── */}
+          <div className="bg-white rounded-2xl border border-green-100 shadow-sm p-5 h-fit lg:sticky lg:top-24">
             <h3 className="font-semibold text-green-900 mb-4">Order Summary</h3>
             <div className="space-y-3 mb-4">
               {cartProducts.map(p => (
                 <div key={p.id} className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-green-50">
+                  <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-green-50 border border-green-100">
                     <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-medium text-green-900 truncate">{p.name}</div>
                     <div className="text-[10px] text-green-400">×{p.qty}</div>
                   </div>
-                  <div className="text-xs font-bold text-green-800">{formatPrice(p.price * p.qty)}</div>
+                  <div className="text-xs font-bold text-green-800 flex-shrink-0">{formatPrice(p.price * p.qty)}</div>
                 </div>
               ))}
             </div>
             <div className="border-t border-green-100 pt-3 space-y-2 text-sm">
-              <div className="flex justify-between text-green-600"><span>Subtotal</span><span>{formatPrice(subtotal)}</span></div>
-              {discountAmt > 0 && <div className="flex justify-between text-green-600"><span>Discount</span><span>-{formatPrice(discountAmt)}</span></div>}
-              <div className="flex justify-between text-green-600"><span>Delivery</span><span className={delivery === 0 ? 'text-green-500 font-semibold' : ''}>{delivery === 0 ? 'FREE' : formatPrice(delivery)}</span></div>
-              <div className="flex justify-between text-green-900 font-bold text-base pt-2 border-t border-green-100"><span>Total</span><span>{formatPrice(total)}</span></div>
+              <div className="flex justify-between text-green-600">
+                <span>Subtotal</span><span>{formatPrice(subtotal)}</span>
+              </div>
+              {discountAmt > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <span>Discount</span><span>-{formatPrice(discountAmt)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-green-600">
+                <span>Delivery</span>
+                <span className={delivery === 0 ? 'text-green-500 font-semibold' : ''}>
+                  {delivery === 0 ? 'FREE' : formatPrice(delivery)}
+                </span>
+              </div>
+              <div className="flex justify-between text-green-900 font-bold text-base pt-2 border-t border-green-100">
+                <span>Total</span><span>{formatPrice(total)}</span>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
     </PageWrapper>
   )
 }
 
-function Field({ label, ...props }) {
+// ── Reusable form field ──────────────────────────────────────────────────────
+function Field({ label, error, ...props }) {
   return (
     <div>
       <label className="block text-xs font-semibold text-green-700 mb-1.5">{label}</label>
       <input
         {...props}
-        className="w-full px-3 py-2.5 border border-green-200 rounded-xl text-sm text-green-900 placeholder:text-green-300 focus:outline-none focus:border-green-400 transition-colors font-body bg-white"
+        className={`w-full px-3 py-2.5 border rounded-xl text-sm text-green-900 placeholder:text-green-300 focus:outline-none transition-colors font-body bg-white ${
+          error
+            ? 'border-red-300 focus:border-red-400'
+            : 'border-green-200 focus:border-green-400'
+        }`}
       />
+      {error && (
+        <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
+          <AlertCircle size={11} className="flex-shrink-0" /> {error}
+        </p>
+      )}
     </div>
   )
 }
