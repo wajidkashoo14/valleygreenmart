@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 const SLIDES = [
   {
     id: 1,
-    url: '/hero/safron.jfif',
+    url: '/hero/saffron.webp',
     title: 'Saffron Fields of Pampore',
     sub: 'Pampore, Kashmir — The Saffron Capital',
     tag: '🌸 Kashmir Kesar · GI Tagged',
@@ -35,7 +35,7 @@ const SLIDES = [
   },
   {
     id: 4,
-    url: '/hero/himaliya.jfif',
+    url: '/hero/himaliya.webp',
     title: 'Valley Farms in the Himalayas',
     sub: 'Kashmir Valley — 1,800m above sea level',
     tag: '🏔️ Organic Farming · NPOP Certified',

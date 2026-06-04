@@ -126,10 +126,10 @@ export default function Checkout() {
                   </div>
                   <div className="space-y-3">
                     {[
-                      { id: 'cod', emoji: '💵', label: 'Cash on Delivery', sub: 'Pay when delivered' },
-                      { id: 'upi', emoji: '📱', label: 'UPI / PhonePe / GPay', sub: 'Instant payment' },
-                      { id: 'card', emoji: '💳', label: 'Credit / Debit Card', sub: 'Visa, Mastercard, RuPay' },
-                      { id: 'nb', emoji: '🏦', label: 'Net Banking', sub: 'All major banks' },
+                     { id: 'cod',     label: 'Cash on Delivery', icon: '💵', available: true  },
+                     { id: 'upi',     label: 'UPI',              icon: '📱', available: false },
+                     { id: 'card',    label: 'Card',             icon: '💳', available: false },
+                     { id: 'netbank', label: 'Net Banking',       icon: '🏦', available: false },
                     ].map(m => (
                       <button
                         key={m.id}

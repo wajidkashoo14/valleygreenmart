@@ -292,7 +292,7 @@ export default function Home() {
           className="relative rounded-2xl sm:rounded-3xl overflow-hidden"
         >
           <img
-            src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1600&q=88&auto=format&fit=crop"
+            src="/products/saffron-banner.webp"
             alt="Kashmir Saffron"
             className="w-full object-cover"
             style={{ height: "clamp(180px, 30vw, 320px)" }}
