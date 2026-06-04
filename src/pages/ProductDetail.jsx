@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Heart, ShoppingCart, Star, MapPin, Shield, Truck, ChevronLeft, ChevronRight, Minus, Plus, Check } from 'lucide-react'
+import { Heart, ShoppingCart, Star, MapPin, Shield, Truck, ChevronLeft, ChevronRight, Minus, Plus, Check, Calendar } from 'lucide-react'
 import { PRODUCTS } from '../data/products'
 import { useCart, useWishlist } from '../hooks'
 import { formatPrice, getDiscount } from '../utils'
@@ -21,6 +21,7 @@ export default function ProductDetail() {
   const { toggle, has } = useWishlist()
   const wished = product ? has(product.id) : false
   const discount = product ? getDiscount(product.price, product.originalPrice) : null
+  const isComingSoon = product?.comingSoon || false
 
   if (!product) return (
     <PageWrapper>
@@ -39,6 +40,7 @@ export default function ProductDetail() {
   const allImages = product.images?.length ? product.images : [product.image]
 
   const handleAdd = () => {
+    if (isComingSoon) return
     addToCart(product.id, qty, product.name)
     setAddedAnim(true)
     setTimeout(() => setAddedAnim(false), 1800)
@@ -74,20 +76,28 @@ export default function ProductDetail() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.97 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${isComingSoon ? 'grayscale-[30%] opacity-80' : ''}`}
                 />
               </AnimatePresence>
-              {product.badge && (
+
+              {/* Badges */}
+              {isComingSoon && (
+                <span className="absolute top-4 left-4 bg-zinc-700 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide flex items-center gap-1">
+                  <Calendar size={14} /> Coming Soon
+                </span>
+              )}
+              {product.badge && !isComingSoon && (
                 <span className="absolute top-4 left-4 bg-green-700 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
                   {product.badge}
                 </span>
               )}
-              {discount && (
+              {discount && !isComingSoon && (
                 <span className="absolute top-4 right-4 bg-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                   -{discount}%
                 </span>
               )}
             </div>
+
             {allImages.length > 1 && (
               <div className="flex gap-2">
                 {allImages.map((img, i) => (
@@ -112,10 +122,16 @@ export default function ProductDetail() {
               >
                 <MapPin size={11} /> {product.origin}
               </button>
-              {product.inStock
-                ? <span className="text-xs font-semibold text-green-600 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full">✓ In Stock</span>
-                : <span className="text-xs font-semibold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-full">Out of Stock</span>
-              }
+
+              {isComingSoon ? (
+                <span className="text-xs font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full flex items-center gap-1">
+                  <Calendar size={13} /> Available Soon
+                </span>
+              ) : product.inStock ? (
+                <span className="text-xs font-semibold text-green-600 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full">✓ In Stock</span>
+              ) : (
+                <span className="text-xs font-semibold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-full">Out of Stock</span>
+              )}
             </div>
 
             <h1 className="font-display font-bold text-2xl sm:text-3xl text-green-900 leading-tight mb-3">{product.name}</h1>
@@ -131,14 +147,25 @@ export default function ProductDetail() {
               <span className="text-sm text-green-400">({product.reviews} reviews)</span>
             </div>
 
-            {/* Price */}
-            <div className="flex items-baseline gap-3 mb-1">
-              <span className="text-3xl font-bold text-green-900">{formatPrice(product.price)}</span>
-              {product.originalPrice && (
-                <span className="text-lg text-green-400 line-through">{formatPrice(product.originalPrice)}</span>
+            {/* Price / Coming Soon */}
+            <div className="mb-5">
+              {isComingSoon ? (
+                <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-xl">
+                  <Calendar size={18} />
+                  <span className="font-semibold">This product is coming soon</span>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-baseline gap-3 mb-1">
+                    <span className="text-3xl font-bold text-green-900">{formatPrice(product.price)}</span>
+                    {product.originalPrice && (
+                      <span className="text-lg text-green-400 line-through">{formatPrice(product.originalPrice)}</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-green-500">{product.unit} · {product.weight}</p>
+                </>
               )}
             </div>
-            <p className="text-sm text-green-500 mb-5">{product.unit} · {product.weight}</p>
 
             <p className="text-green-700 leading-relaxed mb-6 text-[15px]">{product.desc}</p>
 
@@ -151,38 +178,52 @@ export default function ProductDetail() {
               ))}
             </div>
 
-            {/* Qty + Actions */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center gap-0 border border-green-200 rounded-full overflow-hidden bg-white">
-                <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-green-700 hover:bg-green-50 transition-colors">
-                  <Minus size={14} />
-                </button>
-                <span className="w-10 text-center font-bold text-green-900 text-sm">{qty}</span>
-                <button onClick={() => setQty(q => q + 1)} className="w-10 h-10 flex items-center justify-center text-green-700 hover:bg-green-50 transition-colors">
-                  <Plus size={14} />
-                </button>
+            {/* Qty Selector + Actions */}
+            {!isComingSoon && (
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-0 border border-green-200 rounded-full overflow-hidden bg-white">
+                  <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-green-700 hover:bg-green-50 transition-colors">
+                    <Minus size={14} />
+                  </button>
+                  <span className="w-10 text-center font-bold text-green-900 text-sm">{qty}</span>
+                  <button onClick={() => setQty(q => q + 1)} className="w-10 h-10 flex items-center justify-center text-green-700 hover:bg-green-50 transition-colors">
+                    <Plus size={14} />
+                  </button>
+                </div>
+                <span className="text-sm text-green-500">Total: <span className="font-bold text-green-800">{formatPrice(product.price * qty)}</span></span>
               </div>
-              <span className="text-sm text-green-500">Total: <span className="font-bold text-green-800">{formatPrice(product.price * qty)}</span></span>
-            </div>
+            )}
 
             <div className="flex gap-3 mb-6">
               <motion.button
-                whileTap={{ scale: 0.97 }}
+                whileTap={{ scale: isComingSoon ? 1 : 0.97 }}
                 onClick={handleAdd}
-                disabled={!product.inStock}
+                disabled={isComingSoon || !product.inStock}
                 className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-full font-semibold text-sm transition-all ${
-                  addedAnim
+                  isComingSoon
+                    ? 'bg-zinc-100 text-zinc-500 cursor-not-allowed'
+                    : addedAnim
                     ? 'bg-green-600 text-white'
                     : 'bg-green-800 hover:bg-green-700 text-white hover:shadow-lg'
-                } disabled:bg-green-200 disabled:cursor-not-allowed`}
+                }`}
               >
                 <AnimatePresence mode="wait">
-                  {addedAnim
-                    ? <motion.span key="added" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-2"><Check size={16} /> Added!</motion.span>
-                    : <motion.span key="add" className="flex items-center gap-2"><ShoppingCart size={16} /> Add to Cart</motion.span>
-                  }
+                  {isComingSoon ? (
+                    <span className="flex items-center gap-2">
+                      <Calendar size={18} /> Coming Soon
+                    </span>
+                  ) : addedAnim ? (
+                    <motion.span key="added" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-2">
+                      <Check size={16} /> Added!
+                    </motion.span>
+                  ) : (
+                    <motion.span key="add" className="flex items-center gap-2">
+                      <ShoppingCart size={16} /> Add to Cart
+                    </motion.span>
+                  )}
                 </AnimatePresence>
               </motion.button>
+
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => toggle(product.id, product.name)}
@@ -196,21 +237,23 @@ export default function ProductDetail() {
               </motion.button>
             </div>
 
-            {/* Trust signals */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { icon: <Truck size={15} />, title: 'Free Delivery', sub: 'On orders ₹999+' },
-                { icon: <Shield size={15} />, title: 'Quality Guarantee', sub: 'Full refund if not fresh' },
-              ].map(f => (
-                <div key={f.title} className="flex items-center gap-2.5 p-3 rounded-xl bg-green-50 border border-green-100">
-                  <span className="text-green-600">{f.icon}</span>
-                  <div>
-                    <div className="text-xs font-semibold text-green-800">{f.title}</div>
-                    <div className="text-[10px] text-green-500">{f.sub}</div>
+            {/* Trust signals - Hidden for Coming Soon */}
+            {!isComingSoon && (
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { icon: <Truck size={15} />, title: 'Free Delivery', sub: 'On orders ₹999+' },
+                  { icon: <Shield size={15} />, title: 'Quality Guarantee', sub: 'Full refund if not fresh' },
+                ].map(f => (
+                  <div key={f.title} className="flex items-center gap-2.5 p-3 rounded-xl bg-green-50 border border-green-100">
+                    <span className="text-green-600">{f.icon}</span>
+                    <div>
+                      <div className="text-xs font-semibold text-green-800">{f.title}</div>
+                      <div className="text-[10px] text-green-500">{f.sub}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
