@@ -26,10 +26,10 @@ export default function UserMenu({ isOpen, onClose }) {
   }, [isOpen, onClose])
 
   const handleLogout = () => {
-    logout()
+    navigate('/', { replace: true })
     onClose()
+    logout()
     toast.add('👋 Signed out successfully. See you soon!')
-    navigate('/')
   }
 
   if (!user) return null

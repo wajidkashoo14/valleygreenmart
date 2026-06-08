@@ -214,7 +214,7 @@ export default function RegisterPage() {
                   label="Full Name"
                   icon={<User size={15} />}
                   type="text"
-                  placeholder="Ahmad Mir"
+                  placeholder="Full Name"
                   value={form.name}
                   onChange={setField('name')}
                   error={errors.name}

@@ -359,63 +359,85 @@ export default function Home() {
       </section>
 
       {/* ── Pan India Delivery Section ─────────────────────────────────────── */}
-      <section className="w-full bg-gradient-to-br from-sky-950 via-sky-900 to-green-900 py-10 sm:py-14 lg:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 sm:mb-10">
+      <section className="w-full relative overflow-hidden py-14 sm:py-20 lg:py-24"
+        style={{ background: 'linear-gradient(135deg, #0c1a12 0%, #0f2d1c 40%, #0e2233 100%)' }}>
+
+        {/* Decorative glows */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-green-500/10 rounded-full blur-[100px]" />
+          <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[100px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-emerald-900/20 rounded-full blur-[80px]" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10 sm:mb-14">
             <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-sky-200 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3">
-                🚚 Delivered Anywhere in India
+              <div className="inline-flex items-center gap-2 bg-emerald-400/10 border border-emerald-400/20 text-emerald-300 px-3.5 py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Ships Anywhere in India
               </div>
-              <h2
-                className="font-display font-bold text-white"
-                style={{ fontSize: "clamp(1.4rem, 3.5vw, 2.4rem)" }}
-              >
-                Pan India Products
+              <h2 className="font-display font-bold text-white leading-tight"
+                style={{ fontSize: 'clamp(1.6rem, 4vw, 2.8rem)' }}>
+                Premium Kashmir,<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-sky-300">
+                  Delivered Nationwide
+                </span>
               </h2>
-              <p className="text-sky-300 text-xs sm:text-sm mt-1.5 max-w-lg">
-                Premium Kashmir dry fruits, saffron and honey — vacuum-sealed
-                and shipped to your doorstep across India.
+              <p className="text-slate-400 text-sm mt-3 max-w-md leading-relaxed">
+                Vacuum-sealed at source. Cold-chain packed. Authenticated by GI tag.
+                Delivered to your door — anywhere in India.
               </p>
             </div>
             <button
               onClick={() => navigate("/products?panIndia=true")}
-              className="flex items-center gap-2 bg-white text-sky-900 px-5 py-2.5 rounded-full font-bold text-sm hover:bg-sky-50 active:scale-95 transition-all whitespace-nowrap self-start sm:self-auto"
+              className="group flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white px-6 py-3 rounded-full font-bold text-sm shadow-lg shadow-emerald-900/40 hover:shadow-emerald-700/50 transition-all active:scale-95 whitespace-nowrap self-start sm:self-auto"
             >
-              View All <ArrowRight size={14} />
+              Shop Pan India
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
-          <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 mb-8">
+
+          {/* Trust pillars */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
             {[
-              {
-                icon: "📦",
-                title: "Vacuum Sealed",
-                sub: "Freshness preserved",
-              },
-              { icon: "🚚", title: "Pan India", sub: "5-7 day delivery" },
-              {
-                icon: "🔒",
-                title: "100% Authentic",
-                sub: "Direct from Kashmir",
-              },
+              { icon: '📦', title: 'Vacuum Sealed',    sub: 'Freshness locked in', color: 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/20' },
+              { icon: '🚚', title: '2–7 Day Delivery', sub: 'Fast to North India',  color: 'from-sky-500/20 to-sky-500/5 border-sky-500/20' },
+              { icon: '🌸', title: 'GI Certified',     sub: 'Government verified',  color: 'from-rose-500/20 to-rose-500/5 border-rose-500/20' },
+              { icon: '🔒', title: '100% Authentic',   sub: 'Direct from farmers',  color: 'from-amber-500/20 to-amber-500/5 border-amber-500/20' },
             ].map((f) => (
-              <div
-                key={f.title}
-                className="bg-white/10 border border-white/15 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center"
-              >
-                <div className="text-xl sm:text-2xl mb-1">{f.icon}</div>
-                <div className="text-white font-bold text-xs sm:text-sm">
-                  {f.title}
-                </div>
-                <div className="text-sky-300 text-[10px] sm:text-xs mt-0.5 hidden sm:block">
-                  {f.sub}
-                </div>
+              <div key={f.title}
+                className={`bg-gradient-to-b ${f.color} border rounded-2xl p-4 sm:p-5 text-center backdrop-blur-sm`}>
+                <div className="text-2xl sm:text-3xl mb-2">{f.icon}</div>
+                <div className="text-white font-bold text-xs sm:text-sm leading-tight">{f.title}</div>
+                <div className="text-slate-400 text-[10px] sm:text-xs mt-1">{f.sub}</div>
               </div>
             ))}
           </div>
+
+          {/* Product grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {panIndia.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} />
             ))}
+          </div>
+
+          {/* Bottom CTA strip */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl px-5 sm:px-8 py-5">
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-xl flex-shrink-0">🎁</div>
+              <div>
+                <p className="text-white font-bold text-sm">Free shipping on orders above ₹999</p>
+                <p className="text-slate-400 text-xs mt-0.5">Across all 28 states & 8 UTs</p>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate("/products?panIndia=true")}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all whitespace-nowrap"
+            >
+              Browse All <ArrowRight size={13} />
+            </button>
           </div>
         </div>
       </section>

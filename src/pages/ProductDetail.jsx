@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, ShoppingCart, Star, MapPin, Shield, Truck, ChevronLeft, ChevronRight, Minus, Plus, Check, Calendar } from 'lucide-react'
@@ -16,6 +16,17 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1)
   const [activeImg, setActiveImg] = useState(0)
   const [addedAnim, setAddedAnim] = useState(false)
+  const [stickyVisible, setStickyVisible] = useState(false)
+  const addBtnRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setStickyVisible(!entry.isIntersecting),
+      { threshold: 0 }
+    )
+    if (addBtnRef.current) observer.observe(addBtnRef.current)
+    return () => observer.disconnect()
+  }, [product])
 
   const { add: addToCart } = useCart()
   const { toggle, has } = useWishlist()
@@ -194,7 +205,7 @@ export default function ProductDetail() {
               </div>
             )}
 
-            <div className="flex gap-3 mb-6">
+            <div ref={addBtnRef} className="flex gap-3 mb-6">
               <motion.button
                 whileTap={{ scale: isComingSoon ? 1 : 0.97 }}
                 onClick={handleAdd}
@@ -267,6 +278,41 @@ export default function ProductDetail() {
           </section>
         )}
       </div>
+      {/* Sticky Add to Cart — mobile only */}
+      <AnimatePresence>
+        {stickyVisible && !isComingSoon && product.inStock && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+            className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-green-100 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] px-4 py-3 flex items-center gap-3"
+          >
+            <div className="flex items-center gap-0 border border-green-200 rounded-full overflow-hidden bg-white">
+              <button onClick={() => setQty(q => Math.max(1, q - 1))} className="w-9 h-9 flex items-center justify-center text-green-700 hover:bg-green-50 transition-colors">
+                <Minus size={13} />
+              </button>
+              <span className="w-8 text-center font-bold text-green-900 text-sm">{qty}</span>
+              <button onClick={() => setQty(q => q + 1)} className="w-9 h-9 flex items-center justify-center text-green-700 hover:bg-green-50 transition-colors">
+                <Plus size={13} />
+              </button>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-green-500 truncate">{product.name}</p>
+              <p className="text-sm font-bold text-green-900">{formatPrice(product.price * qty)}</p>
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={handleAdd}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                addedAnim ? 'bg-green-600 text-white' : 'bg-green-800 hover:bg-green-700 text-white'
+              }`}
+            >
+              {addedAnim ? <><Check size={15} /> Added!</> : <><ShoppingCart size={15} /> Add to Cart</>}
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageWrapper>
   )
 }

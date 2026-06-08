@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, MapPin, CreditCard, Truck, Check, ShoppingBag, AlertCircle } from 'lucide-react'
+import { ChevronRight, MapPin, CreditCard, Truck, Check, ShoppingBag, AlertCircle, Clock } from 'lucide-react'
 import { useCart } from '../hooks'
 import { useAuthStore } from '../store/authStore'
 import { useToastStore } from '../store/toastStore'
 import { formatPrice } from '../utils'
+import { getDeliveryETA } from '../utils/deliveryEta'
+import { saveOrder } from '../services/orderService'
+import { sendOrderConfirmation } from '../services/emailService'
 import PageWrapper from '../components/ui/PageWrapper'
 
 const STEPS = ['Address', 'Payment', 'Review']
@@ -24,15 +27,19 @@ export default function Checkout() {
   const [payMethod, setPayMethod] = useState('cod')
   const [errors,   setErrors]   = useState({})
 
+  const [orderId, setOrderId] = useState('')
   const [form, setForm] = useState({
     firstName: '',
     lastName:  '',
     phone:     '',
+    email:     '',
     address:   '',
     city:      'Srinagar',
     pin:       '',
     state:     'Jammu & Kashmir',
   })
+
+  const eta = getDeliveryETA(form.state)
 
   const { cartProducts, subtotal, delivery, total, discountAmt, clearCart } = useCart()
   const { user }  = useAuthStore()
@@ -52,6 +59,8 @@ export default function Checkout() {
     if (!form.lastName.trim())                           e.lastName  = 'Last name is required'
     if (!form.phone.trim())                              e.phone     = 'Phone number is required'
     else if (!/^[+\d][\d\s\-]{8,14}$/.test(form.phone)) e.phone     = 'Enter a valid phone number'
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+                                                         e.email     = 'Enter a valid email address'
     if (!form.address.trim())                            e.address   = 'Address is required'
     if (!form.city.trim())                               e.city      = 'City is required'
     if (!form.pin.trim())                                e.pin       = 'PIN code is required'
@@ -67,12 +76,29 @@ export default function Checkout() {
   // ── Place order ─────────────────────────────────────────────────────────────
   const handlePlaceOrder = async () => {
     setPlacing(true)
-    await new Promise(r => setTimeout(r, 1600))
-    clearCart()
-    setPlacing(false)
-    setPlaced(true)
-    toast.add('🎉 Order placed successfully!')
-    setTimeout(() => navigate('/'), 3000)
+    try {
+      const newOrderId = `VGM-${Date.now()}`
+      setOrderId(newOrderId)
+
+      // Save to Firestore
+      await saveOrder({
+        user, form, cartProducts, total, subtotal, delivery,
+        payMethod, orderId: newOrderId,
+      }).catch(err => console.error('Firestore save failed:', err))
+
+      // Send confirmation email (fire-and-forget)
+      sendOrderConfirmation({
+        form, cartProducts, total, subtotal, delivery,
+        orderId: newOrderId, eta: eta.label,
+      }).catch(err => console.warn('Email send failed:', err))
+
+      clearCart()
+      setPlaced(true)
+      toast.add('🎉 Order placed successfully!')
+      setTimeout(() => navigate('/'), 4000)
+    } finally {
+      setPlacing(false)
+    }
   }
 
   // ── Order placed screen ──────────────────────────────────────────────────────
@@ -86,7 +112,17 @@ export default function Checkout() {
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <h2 className="font-display text-3xl font-bold text-green-900 mb-3">Order Placed! 🎉</h2>
-          <p className="text-green-600 mb-2">Thank you for your order.</p>
+          <p className="text-green-500 text-xs font-mono mb-4">{orderId}</p>
+          <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            <Clock size={14} /> Expected delivery: {eta.label}
+          </div>
+          {form.email ? (
+            <p className="text-green-600 mb-2">
+              Order confirmation sent to <span className="font-semibold">{form.email}</span>
+            </p>
+          ) : (
+            <p className="text-green-600 mb-2">We'll contact you on <span className="font-semibold">{form.phone}</span> to confirm.</p>
+          )}
           <p className="text-green-500 text-sm">Redirecting to home in a moment…</p>
         </motion.div>
       </div>
@@ -141,9 +177,18 @@ export default function Checkout() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    <Field label="First Name *"  value={form.firstName} onChange={setField('firstName')} placeholder="Ahmad"           error={errors.firstName} />
-                    <Field label="Last Name *"   value={form.lastName}  onChange={setField('lastName')}  placeholder="Mir"             error={errors.lastName} />
+                    <Field label="First Name *"  value={form.firstName} onChange={setField('firstName')} placeholder="First Name"      error={errors.firstName} />
+                    <Field label="Last Name *"   value={form.lastName}  onChange={setField('lastName')}  placeholder="Last Name"       error={errors.lastName} />
                     <Field label="Phone *"       value={form.phone}     onChange={setField('phone')}     placeholder="+91 77809 66909" error={errors.phone} type="tel" />
+                    <Field
+                      label="Email (for order confirmation)"
+                      value={form.email}
+                      onChange={setField('email')}
+                      placeholder="you@example.com"
+                      error={errors.email}
+                      type="email"
+                      hint="Optional — we'll send your order receipt here"
+                    />
                     <Field label="PIN Code *"    value={form.pin}       onChange={setField('pin')}       placeholder="190003"          error={errors.pin} maxLength={6} />
                     <div className="sm:col-span-2">
                       <Field label="Address *" value={form.address} onChange={setField('address')} placeholder="House No, Street, Locality" error={errors.address} />
@@ -159,20 +204,44 @@ export default function Checkout() {
                         <option>Jammu &amp; Kashmir</option>
                         <option>Delhi</option>
                         <option>Punjab</option>
+                        <option>Haryana</option>
+                        <option>Himachal Pradesh</option>
+                        <option>Uttarakhand</option>
+                        <option>Chandigarh</option>
+                        <option>Uttar Pradesh</option>
+                        <option>Rajasthan</option>
                         <option>Maharashtra</option>
                         <option>Karnataka</option>
                         <option>Tamil Nadu</option>
-                        <option>Uttar Pradesh</option>
                         <option>West Bengal</option>
                         <option>Gujarat</option>
-                        <option>Rajasthan</option>
+                        <option>Andhra Pradesh</option>
+                        <option>Telangana</option>
+                        <option>Kerala</option>
+                        <option>Madhya Pradesh</option>
+                        <option>Bihar</option>
+                        <option>Odisha</option>
+                        <option>Assam</option>
+                        <option>Jharkhand</option>
+                        <option>Chhattisgarh</option>
+                        <option>Goa</option>
                       </select>
                     </div>
                   </div>
 
+                  {/* ETA banner */}
+                  <div className={`mt-5 flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium border ${
+                    eta.fast
+                      ? 'bg-green-50 border-green-200 text-green-700'
+                      : 'bg-amber-50 border-amber-200 text-amber-700'
+                  }`}>
+                    <Clock size={15} className="flex-shrink-0" />
+                    <span>Estimated delivery to <strong>{form.state || 'your state'}</strong>: <strong>{eta.label}</strong></span>
+                  </div>
+
                   <button
                     onClick={handleContinueToPayment}
-                    className="mt-6 w-full sm:w-auto flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-md"
+                    className="mt-4 w-full sm:w-auto flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-md"
                   >
                     Continue to Payment <ChevronRight size={15} />
                   </button>
@@ -295,6 +364,12 @@ export default function Checkout() {
                       <span className="text-green-500">Payment</span>
                       <span className="text-green-900 font-medium">💵 Cash on Delivery</span>
                     </div>
+                    <div className="flex justify-between items-center pt-1 border-t border-green-200">
+                      <span className="text-green-500 flex items-center gap-1"><Clock size={12} /> ETA</span>
+                      <span className={`font-semibold text-xs px-2 py-1 rounded-full ${eta.fast ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {eta.label}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="flex gap-3">
@@ -351,6 +426,10 @@ export default function Checkout() {
                   {delivery === 0 ? 'FREE' : formatPrice(delivery)}
                 </span>
               </div>
+              <div className="flex justify-between text-green-600 text-xs">
+                <span className="flex items-center gap-1"><Clock size={11} /> ETA</span>
+                <span className={`font-semibold ${eta.fast ? 'text-green-600' : 'text-amber-600'}`}>{eta.label}</span>
+              </div>
               <div className="flex justify-between text-green-900 font-bold text-base pt-2 border-t border-green-100">
                 <span>Total</span><span>{formatPrice(total)}</span>
               </div>
@@ -364,7 +443,7 @@ export default function Checkout() {
 }
 
 // ── Reusable form field ──────────────────────────────────────────────────────
-function Field({ label, error, ...props }) {
+function Field({ label, error, hint, ...props }) {
   return (
     <div>
       <label className="block text-xs font-semibold text-green-700 mb-1.5">{label}</label>
@@ -376,6 +455,9 @@ function Field({ label, error, ...props }) {
             : 'border-green-200 focus:border-green-400'
         }`}
       />
+      {hint && !error && (
+        <p className="mt-1 text-[11px] text-green-400">{hint}</p>
+      )}
       {error && (
         <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
           <AlertCircle size={11} className="flex-shrink-0" /> {error}

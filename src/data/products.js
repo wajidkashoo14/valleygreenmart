@@ -183,8 +183,8 @@ export const PRODUCTS = [
     subcategory: 'Dry Fruits',
     emoji: '🪨',
     // Dark resin close-up in spoon / jar
-    image:  u('1607006344380-b6775a0824a7'),
-    images: [u('1607006344380-b6775a0824a7', 1200)],
+    image:  '/products/shilajit.jpg',
+    images: ['/products/shilajit.jpg'],
     price: 1800, originalPrice: 2200, unit: 'per 30g', weight: '30g',
     rating: 4.8, reviews: 156, badge: 'Authentic', inStock: true,
     origin: 'Himalayan Range, 3500m+',

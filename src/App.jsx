@@ -7,6 +7,7 @@ import Footer from "./components/layout/Footer";
 import Toast from "./components/ui/Toast";
 import WhatsAppButton from "./components/ui/WhatsAppButton";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import InstallPrompt from "./components/ui/InstallPrompt";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home"));
@@ -46,9 +47,13 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen bg-cream font-body">
       <ScrollToTop />
-      {!isAuthPage && <Navbar />}
+      {!isAuthPage && (
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <Navbar />
+        </div>
+      )}
 
-      <main className="flex-1">
+      <main className={`flex-1 ${!isAuthPage ? 'pt-[64px] sm:pt-[96px]' : ''}`}>
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -96,6 +101,7 @@ export default function App() {
 
       <Toast />
       {!isAuthPage && <WhatsAppButton />}
+      {!isAuthPage && <InstallPrompt />}
     </div>
   );
 }

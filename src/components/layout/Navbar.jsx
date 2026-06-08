@@ -102,7 +102,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div ref={headerRef} className="sticky top-0 z-50">
+      <div ref={headerRef}>
 
         {/* Announcement bar */}
         <div className="bg-green-900 text-white text-[10px] sm:text-xs py-1.5 sm:py-2 text-center tracking-wide select-none hidden sm:block">
@@ -114,20 +114,19 @@ export default function Navbar() {
         {/* Main header */}
         <header className={`border-b transition-all duration-300 ${
           scrolled
-            ? 'bg-white/97 backdrop-blur-xl shadow-[0_2px_24px_rgba(0,0,0,0.08)] border-green-100'
-            : 'bg-[#fdfcf8]/96 backdrop-blur-sm border-green-100/50'
+            ? 'bg-white shadow-[0_2px_24px_rgba(0,0,0,0.08)] border-green-100'
+            : 'bg-[#fdfcf8] border-green-100/50'
         }`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[64px] flex items-center gap-3">
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group mr-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 to-green-800 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200">
+            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group mr-2" aria-label="Valley Green Mart home">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 to-green-800 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200 flex-shrink-0">
                 <Leaf size={18} className="text-white" strokeWidth={2.5} />
               </div>
-              <div className="hidden sm:flex flex-col leading-none">
-                <span className="font-display font-bold text-[15px] text-green-900 leading-tight">Valley Green</span>
-                <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-green-500 mt-0.5">Mart · Srinagar</span>
-              </div>
+              <span className="hidden sm:block font-display font-bold text-[16px] text-green-900 leading-none whitespace-nowrap">
+                Valley Green Mart
+              </span>
             </Link>
 
             {/* Desktop nav */}
@@ -395,9 +394,11 @@ export default function Navbar() {
               className="fixed top-0 right-0 bottom-0 z-50 w-[320px] max-w-[100vw] bg-white shadow-2xl lg:hidden flex flex-col"
             >
               <div className="flex items-center justify-between px-5 py-4 border-b border-green-100 bg-green-50">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-green-700 flex items-center justify-center"><Leaf size={14} className="text-white" /></div>
-                  <span className="font-display font-bold text-[14px] text-green-900">Valley Green Mart</span>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500 to-green-800 flex items-center justify-center shadow-md flex-shrink-0">
+                    <Leaf size={15} className="text-white" strokeWidth={2.5} />
+                  </div>
+                  <span className="font-display font-bold text-[14px] text-green-900 leading-none">Valley Green Mart</span>
                 </div>
                 <button onClick={() => setMobileOpen(false)} className="w-8 h-8 rounded-full hover:bg-green-100 flex items-center justify-center text-green-700">
                   <X size={16} />

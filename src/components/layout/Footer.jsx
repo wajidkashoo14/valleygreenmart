@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertCircle, Loader, Leaf } from 'lucide-react'
+import { subscribeNewsletter } from '../../services/newsletterService'
 
 // ── Social platforms ──────────────────────────────────────────────────────────
 const SOCIALS = [
@@ -81,6 +83,30 @@ const footerLinks = {
 
 export default function Footer() {
   const navigate = useNavigate()
+  const [email,   setEmail]   = useState('')
+  const [error,   setError]   = useState('')
+  const [status,  setStatus]  = useState('idle') // idle | loading | success | error
+
+  const validateEmail = (val) => {
+    if (!val.trim()) return 'Please enter your email address.'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim())) return 'Please enter a valid email address.'
+    return ''
+  }
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault()
+    const err = validateEmail(email)
+    if (err) { setError(err); return }
+    setError('')
+    setStatus('loading')
+    try {
+      await subscribeNewsletter(email.trim().toLowerCase())
+      setStatus('success')
+      setEmail('')
+    } catch {
+      setStatus('error')
+    }
+  }
 
   return (
     <footer className="bg-green-900 text-white">
@@ -92,19 +118,48 @@ export default function Footer() {
             <h3 className="font-display text-lg sm:text-xl font-semibold">Stay fresh, stay informed 🌿</h3>
             <p className="text-green-300 text-sm mt-0.5">Seasonal updates, harvest news and exclusive offers.</p>
           </div>
-          <form className="flex gap-2 w-full sm:w-auto" onSubmit={e => e.preventDefault()}>
-            <input
-              type="email"
-              placeholder="your@email.com"
-              className="flex-1 sm:w-56 px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-sm placeholder:text-green-400 focus:outline-none focus:border-green-300 transition-colors"
-            />
-            <button
-              type="submit"
-              className="px-5 py-2.5 bg-green-400 hover:bg-green-300 text-green-900 font-bold rounded-full text-sm transition-colors whitespace-nowrap"
-            >
-              Subscribe
-            </button>
-          </form>
+
+          {status === 'success' ? (
+            <div className="flex items-center gap-2.5 bg-green-700/50 border border-green-500/50 text-green-200 px-5 py-3 rounded-full text-sm font-medium">
+              <CheckCircle size={16} className="text-green-400 flex-shrink-0" />
+              You're subscribed! Welcome to the valley 🌿
+            </div>
+          ) : (
+            <form className="flex flex-col gap-1.5 w-full sm:w-auto" onSubmit={handleSubscribe} noValidate>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); if (error) setError('') }}
+                  placeholder="your@email.com"
+                  disabled={status === 'loading'}
+                  className={`flex-1 sm:w-60 px-4 py-2.5 rounded-full bg-white/10 border text-sm placeholder:text-green-400/70 focus:outline-none transition-colors disabled:opacity-60 ${
+                    error ? 'border-red-400/70 focus:border-red-400' : 'border-white/20 focus:border-green-300'
+                  }`}
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-green-400 hover:bg-green-300 disabled:bg-green-600 text-green-900 font-bold rounded-full text-sm transition-colors whitespace-nowrap"
+                >
+                  {status === 'loading'
+                    ? <><Loader size={14} className="animate-spin" /> Sending…</>
+                    : <><Send size={13} /> Subscribe</>
+                  }
+                </button>
+              </div>
+              {error && (
+                <p className="flex items-center gap-1.5 text-red-300 text-xs px-1">
+                  <AlertCircle size={12} /> {error}
+                </p>
+              )}
+              {status === 'error' && !error && (
+                <p className="flex items-center gap-1.5 text-red-300 text-xs px-1">
+                  <AlertCircle size={12} /> Something went wrong. Please try again.
+                </p>
+              )}
+            </form>
+          )}
         </div>
       </div>
 
@@ -116,11 +171,10 @@ export default function Footer() {
           <div className="lg:col-span-2">
             {/* Logo */}
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center text-xl flex-shrink-0">🌿</div>
-              <div>
-                <div className="font-display font-bold text-lg leading-tight">Valley Green Mart</div>
-                <div className="text-[10px] text-green-400 uppercase tracking-widest">Srinagar, Kashmir</div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-md flex-shrink-0">
+                <Leaf size={20} className="text-white" strokeWidth={2.5} />
               </div>
+              <span className="font-display font-bold text-lg leading-none">Valley Green Mart</span>
             </div>
 
             <p className="text-green-300 text-sm leading-relaxed max-w-xs mb-5">
@@ -216,6 +270,21 @@ export default function Footer() {
             <span className="text-green-600 font-medium">Made with 🌿 in Kashmir</span>
           </div>
         </div>
+
+      </div>
+      {/* ── Developer credit strip ────────────────────────────────────────── */}
+      <div className="bg-green-950/60 border-t border-white/5 py-2.5 text-center">
+        <p className="text-[11px] text-green-600 tracking-wide">
+          Designed &amp; Developed by{' '}
+          <a
+            href="https://wa.me/919186361336"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-400 font-semibold hover:text-green-300 transition-colors underline underline-offset-2 decoration-green-600 hover:decoration-green-400"
+          >
+            Wajid Kashoo
+          </a>
+        </p>
       </div>
     </footer>
   )

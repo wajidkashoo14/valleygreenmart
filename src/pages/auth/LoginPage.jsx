@@ -250,7 +250,7 @@ export default function LoginPage() {
                 </Link>
               </p>
 
-              {/* Demo hint */}
+              {/* Demo hint
               <div className="mt-8 bg-green-50 border border-green-100 rounded-xl p-4">
                 <p className="text-xs font-semibold text-green-700 mb-2">🧪 Demo credentials</p>
                 <div className="space-y-1 text-xs text-green-600 font-mono">
@@ -264,7 +264,7 @@ export default function LoginPage() {
                 >
                   Auto-fill credentials →
                 </button>
-              </div>
+              </div> */}
             </motion.div>
           )}
         </div>

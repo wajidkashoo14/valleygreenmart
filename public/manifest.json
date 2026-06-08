@@ -1,0 +1,26 @@
+{
+  "name": "Valley Green Mart",
+  "short_name": "VGM",
+  "description": "Premium organic produce from Kashmir — saffron, dry fruits, honey & more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a4731",
+  "theme_color": "#2d7a50",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["shopping", "food"]
+}

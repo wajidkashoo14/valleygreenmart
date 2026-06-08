@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 
 import PageWrapper from '../components/ui/PageWrapper'
+import { sendContactMessage } from '../services/emailService'
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -84,22 +85,16 @@ export default function ContactUs() {
     message: '',
   })
 
-  const [errors, setErrors] = useState({})
-  const [sent, setSent] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [openFaq, setOpenFaq] = useState(null)
+  const [errors,    setErrors]    = useState({})
+  const [sent,      setSent]      = useState(false)
+  const [loading,   setLoading]   = useState(false)
+  const [sendError, setSendError] = useState(false)
+  const [openFaq,   setOpenFaq]   = useState(null)
 
   const set = field => e => {
-    setForm(f => ({
-      ...f,
-      [field]: e.target.value,
-    }))
-
-    setErrors(err => {
-      const n = { ...err }
-      delete n[field]
-      return n
-    })
+    setForm(f => ({ ...f, [field]: e.target.value }))
+    setErrors(err => { const n = { ...err }; delete n[field]; return n })
+    if (sendError) setSendError(false)
   }
 
   const validate = () => {
@@ -122,25 +117,22 @@ export default function ContactUs() {
     return Object.keys(e).length === 0
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
-
     if (!validate()) return
 
     setLoading(true)
+    setSendError(false)
 
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      await sendContactMessage(form)
       setSent(true)
-
-      setForm({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-      })
-    }, 1400)
+      setForm({ name: '', email: '', phone: '', subject: '', message: '' })
+    } catch {
+      setSendError(true)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const openWhatsApp = () => {
@@ -372,7 +364,7 @@ export default function ContactUs() {
                   >
                     <Field
                       label="Full Name *"
-                      placeholder="Ahmad Mir"
+                      placeholder="Full Name"
                       value={form.name}
                       onChange={set('name')}
                       error={errors.name}
@@ -454,14 +446,25 @@ export default function ContactUs() {
                     )}
                   </div>
 
+                  {/* Send error */}
+                  {sendError && (
+                    <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                      <AlertCircle size={15} className="flex-shrink-0" />
+                      <span>Something went wrong. Please try again or <a href="https://wa.me/919186361336" target="_blank" rel="noopener noreferrer" className="underline font-semibold">WhatsApp us</a> directly.</span>
+                    </div>
+                  )}
+
                   {/* SUBMIT */}
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 disabled:bg-green-300 text-white py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg active:scale-[0.98]"
+                    className="w-full flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 disabled:bg-green-400 text-white py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg active:scale-[0.98]"
                   >
                     {loading ? (
-                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <>
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Sending…
+                      </>
                     ) : (
                       <>
                         <Send size={15} />

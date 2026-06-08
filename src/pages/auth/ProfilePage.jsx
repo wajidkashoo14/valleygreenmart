@@ -58,7 +58,7 @@ export default function ProfilePage() {
   const [showCurr,    setShowCurr]    = useState(false)
   const [showNew,     setShowNew]     = useState(false)
 
-  if (!user) { navigate('/login'); return null }
+  if (!user) return null
 
   // ── Profile ───────────────────────────────────────────────────────────────
   const setProfileField = field => e => {
@@ -115,10 +115,10 @@ export default function ProfilePage() {
   }
 
   // ── Logout — MUST be awaited so Firebase clears state before navigate ─────
-  const handleLogout = async () => {
-    await logout()
-    toast.add('👋 Signed out. See you soon!')
+  const handleLogout = () => {
     navigate('/', { replace: true })
+    logout()
+    toast.add('👋 Signed out. See you soon!')
   }
 
   const handleDeleteAccount = async () => {
