@@ -544,63 +544,35 @@ export default function ContactUs() {
             </p>
           </motion.div>
 
-          <motion.div
-            {...fadeUp(0.08)}
-            className="
-              rounded-2xl
-              overflow-hidden
-              border border-green-200
-              shadow-md
-              h-[260px]
-              sm:h-80
-              lg:h-[420px]
-              relative
-            "
-          >
-            <img
-              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1400&q=80&auto=format&fit=crop"
-              alt="Srinagar"
-              className="w-full h-full object-cover"
-            />
-
-            <div className="absolute inset-0 bg-green-900/40 flex items-center justify-center">
-              <div
-                className="
-                  mx-4
-                  w-full
-                  max-w-[92%]
-                  sm:max-w-md
-                  bg-white
-                  rounded-2xl
-                  px-4
-                  sm:px-6
-                  py-4
-                  shadow-xl
-                  text-center
-                "
-              >
-                <MapPin
-                  size={28}
-                  className="text-green-600 mx-auto mb-2"
-                />
-
-                <div className="font-bold text-green-900 text-base">
-                  Valley Green Mart
+          <motion.div {...fadeUp(0.08)} className="rounded-2xl overflow-hidden border border-green-200 shadow-md">
+            {/* Responsive iframe wrapper — always 16:9 on mobile, fixed height on desktop */}
+            <div className="relative w-full h-0 pb-[56.25%] sm:pb-0 sm:h-80 lg:h-[420px]">
+              <iframe
+                title="Valley Green Mart Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3300!2d74.8089!3d34.0937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38e18f5c8e2b8e4d%3A0x0!2sSaida+Kadal+Bridge%2C+Rainwari%2C+Srinagar%2C+Jammu+and+Kashmir+190003!5e0!3m2!1sen!2sin!4v1"
+                className="absolute inset-0 w-full h-full border-0"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            {/* Footer strip with address + button */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white px-4 py-3 border-t border-green-100">
+              <div className="flex items-start gap-2">
+                <MapPin size={15} className="text-green-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-green-900">Valley Green Mart</p>
+                  <p className="text-xs text-green-500">Saida Kadal Bridge, Rainwari, Srinagar — 190003</p>
                 </div>
-
-                <div className="text-green-500 text-xs mt-1">
-                  Saida Kadal Bridge, Rainwari, Srinagar
-                </div>
-
-                <a
-                  href="https://maps.google.com/?q=Saida+Kadal+Bridge+Rainwari+Srinagar+Kashmir+190003"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-block text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full hover:bg-green-100 transition-colors"
-                >
-                  Open in Google Maps →
-                </a>
               </div>
+              <a
+                href="https://maps.google.com/?q=Saida+Kadal+Bridge+Rainwari+Srinagar+Kashmir+190003"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-bold text-white bg-green-700 hover:bg-green-600 px-4 py-2 rounded-full transition-colors w-full sm:w-auto justify-center"
+              >
+                <MapPin size={12} /> Open in Google Maps
+              </a>
             </div>
           </motion.div>
         </div>
