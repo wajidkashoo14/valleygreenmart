@@ -4,9 +4,13 @@ import {
   ShieldCheck, Eye, EyeOff, Package, Users, TrendingUp,
   Clock, Search, ChevronDown, ChevronUp, RefreshCw, LogOut
 } from 'lucide-react'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { auth } from '../../services/firebase'
 import { getAllOrders } from '../../services/orderService'
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'vgm@admin2025'
+const ADMIN_EMAIL    = import.meta.env.VITE_ADMIN_EMAIL
+const ADMIN_FB_PASS  = import.meta.env.VITE_ADMIN_FB_PASSWORD
 
 const STATUS_STYLES = {
   confirmed:  { label: 'Confirmed',   cls: 'bg-blue-100 text-blue-700' },
@@ -33,10 +37,15 @@ function LoginScreen({ onAuth }) {
   const [show, setShow] = useState(false)
   const [err, setErr] = useState(false)
 
-  const attempt = (e) => {
+  const attempt = async (e) => {
     e.preventDefault()
-    if (pw === ADMIN_PASSWORD) { onAuth(); setErr(false) }
-    else { setErr(true); setPw('') }
+    if (pw !== ADMIN_PASSWORD) { setErr(true); setPw(''); return }
+    // Sign in to Firebase so Firestore rules allow reading all orders
+    if (ADMIN_EMAIL && ADMIN_FB_PASS) {
+      try { await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_FB_PASS) } catch (_) {}
+    }
+    onAuth()
+    setErr(false)
   }
 
   return (
@@ -143,7 +152,7 @@ function Panel() {
           <button onClick={load} className="flex items-center gap-1.5 text-green-400 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10">
             <RefreshCw size={13} /> Refresh
           </button>
-          <button onClick={() => setAuthed(false)} className="flex items-center gap-1.5 text-green-400 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10">
+          <button onClick={() => { signOut(auth); setAuthed(false) }} className="flex items-center gap-1.5 text-green-400 hover:text-white text-xs font-medium transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10">
             <LogOut size={13} /> Logout
           </button>
         </div>
