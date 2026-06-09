@@ -114,11 +114,11 @@ export default function ProfilePage() {
     }
   }
 
-  // ── Logout — MUST be awaited so Firebase clears state before navigate ─────
-  const handleLogout = () => {
-    navigate('/', { replace: true })
-    logout()
+  // ── Logout — logout first, then navigate so ProtectedRoute doesn't intercept ──
+  const handleLogout = async () => {
+    await logout()
     toast.add('👋 Signed out. See you soon!')
+    navigate('/', { replace: true })
   }
 
   const handleDeleteAccount = async () => {
@@ -364,37 +364,16 @@ export default function ProfilePage() {
               {/* Orders */}
               {tab === 'orders' && (
                 <motion.div key="orders" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                  <div className="bg-white rounded-2xl border border-green-100 p-4 sm:p-6">
-                    <h2 className="font-display text-lg sm:text-xl font-bold text-green-900 mb-5">Order History</h2>
-                    {MOCK_ORDERS.length === 0 ? (
-                      <div className="text-center py-10">
-                        <ShoppingBag size={36} className="text-green-200 mx-auto mb-3" />
-                        <p className="font-semibold text-green-800 text-sm">No orders yet</p>
-                        <Link to="/products" className="text-sm font-semibold text-green-700 underline mt-2 block">Browse Products</Link>
-                      </div>
-                    ) : (
-                      <div className="space-y-3 sm:space-y-4">
-                        {MOCK_ORDERS.map(order => (
-                          <div key={order.id} className="border border-green-100 rounded-xl p-3 sm:p-4 hover:border-green-300 transition-colors">
-                            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-semibold text-xs sm:text-sm text-green-900">#{order.id}</span>
-                                <span className="text-[10px] sm:text-xs text-gray-400">{order.date}</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLE[order.status]}`}>{order.status}</span>
-                                <span className="font-bold text-green-900 text-xs sm:text-sm">₹{order.total.toLocaleString('en-IN')}</span>
-                              </div>
-                            </div>
-                            <p className="text-[10px] sm:text-xs text-gray-500 mb-2.5">{order.items.join(' · ')}</p>
-                            <div className="flex gap-2">
-                              <button className="text-[10px] sm:text-xs font-semibold text-green-700 border border-green-200 hover:border-green-400 px-2.5 py-1.5 rounded-lg transition-all">View Details</button>
-                              <button className="text-[10px] sm:text-xs font-semibold text-green-700 border border-green-200 hover:border-green-400 px-2.5 py-1.5 rounded-lg transition-all">Reorder</button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  <div className="bg-white rounded-2xl border border-green-100 p-4 sm:p-6 text-center">
+                    <ShoppingBag size={40} className="text-green-200 mx-auto mb-3" />
+                    <h2 className="font-display text-lg font-bold text-green-900 mb-1">Order History</h2>
+                    <p className="text-green-500 text-sm mb-5">View all your past orders, track status, and get help.</p>
+                    <Link
+                      to="/orders"
+                      className="inline-flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold text-sm transition-colors"
+                    >
+                      View My Orders
+                    </Link>
                   </div>
                 </motion.div>
               )}

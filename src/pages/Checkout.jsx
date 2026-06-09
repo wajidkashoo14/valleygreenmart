@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight, MapPin, CreditCard, Truck, Check, ShoppingBag, AlertCircle, Clock } from 'lucide-react'
@@ -40,6 +40,11 @@ export default function Checkout() {
   })
 
   const eta = getDeliveryETA(form.state)
+
+  // Redirect to cart if empty
+  useEffect(() => {
+    if (!placed && cartProducts.length === 0) navigate('/cart', { replace: true })
+  }, [cartProducts.length, placed])
 
   const { cartProducts, subtotal, delivery, total, discountAmt, clearCart } = useCart()
   const { user }  = useAuthStore()

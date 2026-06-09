@@ -1,12 +1,15 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, Minus, Plus, Trash2, Tag, ArrowRight, ChevronLeft } from 'lucide-react'
+import { ShoppingCart, Minus, Plus, Trash2, Tag, ArrowRight, ChevronLeft, MessageCircle } from 'lucide-react'
 import { useCart } from '../hooks'
 import { formatPrice } from '../utils'
 import PageWrapper from '../components/ui/PageWrapper'
+import useSEO from '../hooks/useSEO'
 
 export default function Cart() {
+  useSEO({ title: 'My Cart' })
+  const navigate = useNavigate()
   const { cartProducts, subtotal, delivery, total, discountAmt, coupon, updateQty, remove, applyCoupon, removeCoupon } = useCart()
   const [couponInput, setCouponInput] = useState('')
   const [couponError, setCouponError] = useState('')
@@ -157,6 +160,18 @@ export default function Cart() {
               >
                 Proceed to Checkout <ArrowRight size={15} />
               </Link>
+
+              {/* WhatsApp Order */}
+              <button
+                onClick={() => {
+                  const lines = cartProducts.map(p => `• ${p.name} ×${p.qty} — ₹${(p.price * p.qty).toLocaleString('en-IN')}`).join('\n')
+                  const msg = `Hi! I'd like to place an order:\n\n${lines}\n\nSubtotal: ₹${subtotal.toLocaleString('en-IN')}\nDelivery: ${delivery === 0 ? 'FREE' : '₹' + delivery}\nTotal: ₹${total.toLocaleString('en-IN')}\n\nPlease confirm availability.`
+                  window.open(`https://wa.me/919186361336?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer')
+                }}
+                className="flex items-center justify-center gap-2 w-full mt-2 py-3 bg-[#25D366] hover:bg-[#1fbd5a] text-white rounded-full font-semibold text-sm transition-all hover:shadow-lg active:scale-[0.98]"
+              >
+                <MessageCircle size={16} /> Order via WhatsApp
+              </button>
             </div>
 
             {/* Trust badges */}

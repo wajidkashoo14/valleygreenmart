@@ -6,6 +6,7 @@ import { PRODUCTS } from '../data/products'
 import ProductCard from '../components/ui/ProductCard'
 import SkeletonCard from '../components/ui/SkeletonCard'
 import PageWrapper from '../components/ui/PageWrapper'
+import useSEO from '../hooks/useSEO'
 
 // Build category list from products (exclude duplicates)
 const ALL_CATS = [...new Set(PRODUCTS.map(p => p.category))].sort()
@@ -18,6 +19,7 @@ const SORTS = [
 ]
 
 export default function Products() {
+  useSEO({ title: 'Shop Products', description: 'Browse our full range of organic Kashmiri products — Saffron, Walnuts, Honey, Shilajit, Dry Fruits and more.' })
   const [params, setParams]       = useSearchParams()
   const [loading, setLoading]     = useState(true)
   const [sort, setSort]           = useState('default')

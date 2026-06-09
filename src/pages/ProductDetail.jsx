@@ -7,11 +7,17 @@ import { useCart, useWishlist } from '../hooks'
 import { formatPrice, getDiscount } from '../utils'
 import PageWrapper from '../components/ui/PageWrapper'
 import ProductCard from '../components/ui/ProductCard'
+import useSEO from '../hooks/useSEO'
 
 export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const product = PRODUCTS.find(p => p.id === Number(id) || p.slug === id)
+  useSEO({
+    title: product?.name,
+    description: product?.desc?.slice(0, 155),
+    image: product?.image,
+  })
 
   const [qty, setQty] = useState(1)
   const [activeImg, setActiveImg] = useState(0)

@@ -54,6 +54,11 @@ export function useCart() {
   const totalItems = Object.values(items).reduce((a, b) => a + b, 0)
 
   const add = (productId, qty = 1, productName = '') => {
+    const product = PRODUCTS.find(p => p.id === productId)
+    if (!product?.inStock) {
+      toast.add(`${productName || 'Item'} is currently out of stock`, 'error')
+      return
+    }
     addItem(productId, qty)
     toast.add(`🛒 ${productName || 'Item'} added to cart!`)
   }

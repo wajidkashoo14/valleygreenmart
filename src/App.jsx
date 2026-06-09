@@ -29,6 +29,8 @@ const ForgotPasswordPage = lazy(() =>
   import("./pages/auth/ForgotPasswordPage")
 );
 const ProfilePage = lazy(() => import("./pages/auth/ProfilePage"));
+const Orders = lazy(() => import("./pages/Orders"));
+const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 
 const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
 
@@ -84,6 +86,17 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="/admin" element={<AdminPanel />} />
 
               <Route path="/about" element={<AboutUs />} />
               <Route path="/shipping-policy" element={<ShippingPolicy />} />

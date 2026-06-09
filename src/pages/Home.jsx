@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import useSEO from "../hooks/useSEO";
 import { motion } from "framer-motion";
 import { ArrowRight, Star, Truck, Shield, Leaf, Award } from "lucide-react";
 import { PRODUCTS, CATEGORIES } from "../data/products";
@@ -42,6 +43,7 @@ const wiv = (delay = 0) => ({
 
 export default function Home() {
   const navigate = useNavigate();
+  useSEO({ title: 'Fresh from Kashmir', description: 'Shop premium organic Kashmiri products — Saffron, Walnuts, Honey, Dry Fruits and more. Sourced directly from Himalayan farms, delivered fresh across India.' });
   const featured = PRODUCTS.filter((p) => p.featured && !p.panIndia).slice(
     0,
     8

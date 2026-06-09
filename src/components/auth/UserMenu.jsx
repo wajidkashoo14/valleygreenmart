@@ -25,18 +25,18 @@ export default function UserMenu({ isOpen, onClose }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [isOpen, onClose])
 
-  const handleLogout = () => {
-    navigate('/', { replace: true })
+  const handleLogout = async () => {
     onClose()
-    logout()
+    await logout()
     toast.add('👋 Signed out successfully. See you soon!')
+    navigate('/', { replace: true })
   }
 
   if (!user) return null
 
   const navItems = [
     { icon: <User size={14} />,       label: 'My Profile',    to: '/profile',  desc: 'Edit your details' },
-    { icon: <ShoppingBag size={14} />, label: 'My Orders',    to: '/profile',  desc: 'Track & reorder' },
+    { icon: <ShoppingBag size={14} />, label: 'My Orders',    to: '/orders',   desc: 'Track & review' },
     { icon: <Heart size={14} />,       label: 'Wishlist',     to: '/wishlist', desc: `${0} saved items` },
     { icon: <Star size={14} />,        label: 'Reviews',      to: '/profile',  desc: 'Your feedback' },
     { icon: <Settings size={14} />,    label: 'Settings',     to: '/profile',  desc: 'Preferences & more' },

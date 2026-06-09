@@ -19,17 +19,19 @@ const googleProvider = new GoogleAuthProvider()
 export const useAuthStore = create(
   persist(
     (set, get) => ({
-      user:       null,
-      isLoggedIn: false,
-      isLoading:  false,
-      error:      null,
+      user:          null,
+      isLoggedIn:    false,
+      isInitialized: false,   // true after Firebase fires first onAuthStateChanged
+      isLoading:     false,
+      error:         null,
 
       // Call once in main.jsx — keeps user logged in on refresh
       init: () => {
         onAuthStateChanged(auth, (firebaseUser) => {
           if (firebaseUser) {
             set({
-              isLoggedIn: true,
+              isLoggedIn:    true,
+              isInitialized: true,
               user: {
                 id:     firebaseUser.uid,
                 name:   firebaseUser.displayName || 'User',
@@ -42,8 +44,8 @@ export const useAuthStore = create(
             })
           } else {
             // Firebase says no user — clear everything
-            set({ user: null, isLoggedIn: false })
-            localStorage.removeItem('vgm-auth')  // ← clear stale persisted state
+            set({ user: null, isLoggedIn: false, isInitialized: true })
+            localStorage.removeItem('vgm-auth')
             useCartStore.getState().clearCart()
             useWishlistStore.getState().clear()
           }
@@ -139,6 +141,7 @@ export const useAuthStore = create(
     }),
     {
       name: 'vgm-auth',
+      // Never persist isInitialized — it must always start false and be set by Firebase
       partialize: state => ({ user: state.user, isLoggedIn: state.isLoggedIn }),
     }
   )

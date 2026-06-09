@@ -1,5 +1,23 @@
 import { db } from './firebase'
-import { collection, addDoc, doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, doc, setDoc, getDocs, query, where, orderBy, serverTimestamp } from 'firebase/firestore'
+
+/** Fetch orders for a specific logged-in user */
+export async function getUserOrders(uid) {
+  const q = query(
+    collection(db, 'orders'),
+    where('customer.uid', '==', uid),
+    orderBy('placedAt', 'desc')
+  )
+  const snap = await getDocs(q)
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
+
+/** Fetch all orders (admin use only) */
+export async function getAllOrders() {
+  const q = query(collection(db, 'orders'), orderBy('placedAt', 'desc'))
+  const snap = await getDocs(q)
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+}
 
 /**
  * Save a placed order to Firestore.

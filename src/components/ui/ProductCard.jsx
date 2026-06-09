@@ -6,17 +6,18 @@ import { useCart, useWishlist } from '../../hooks'
 import { formatPrice, getDiscount } from '../../utils'
 
 const BADGE_STYLES = {
-  Premium:       'bg-amber-500 text-white',
-  Bestseller:    'bg-green-700 text-white',
-  New:           'bg-sky-500 text-white',
-  Rare:          'bg-purple-600 text-white',
-  Gift:          'bg-rose-500 text-white',
-  A2:            'bg-sky-600 text-white',
-  Authentic:     'bg-amber-800 text-white',
-  'GI Tagged':   'bg-indigo-600 text-white',
-  'Pan India':   'bg-sky-600 text-white',
-  'Coming Soon': 'bg-zinc-600 text-white',
-  default:       'bg-green-700 text-white',
+  Premium:        'bg-amber-500 text-white',
+  Bestseller:     'bg-green-700 text-white',
+  New:            'bg-sky-500 text-white',
+  Rare:           'bg-purple-600 text-white',
+  Gift:           'bg-rose-500 text-white',
+  A2:             'bg-sky-600 text-white',
+  Authentic:      'bg-amber-800 text-white',
+  'GI Tagged':    'bg-indigo-600 text-white',
+  'Pan India':    'bg-sky-600 text-white',
+  'Coming Soon':  'bg-zinc-600 text-white',
+  'Out of Stock': 'bg-red-500 text-white',
+  default:        'bg-green-700 text-white',
 }
 
 export default function ProductCard({ product, index = 0 }) {
@@ -28,13 +29,14 @@ export default function ProductCard({ product, index = 0 }) {
   const { toggle, has }    = useWishlist()
   const wished             = has(product.id)
   const discount           = getDiscount(product.price, product.originalPrice)
-  const activeBadge        = product.comingSoon ? 'Coming Soon' : product.badge
+  const isUnavailable      = product.comingSoon || product.inStock === false
+  const activeBadge        = product.comingSoon ? 'Coming Soon' : product.inStock === false ? 'Out of Stock' : product.badge
   const badgeClass         = BADGE_STYLES[activeBadge] ?? BADGE_STYLES.default
 
   const handleAddToCart = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    if (product.comingSoon) return
+    if (isUnavailable) return
     addToCart(product.id, 1, product.name)
     setJustAdded(true)
     setTimeout(() => setJustAdded(false), 1600)
@@ -51,7 +53,7 @@ export default function ProductCard({ product, index = 0 }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-      whileHover={product.comingSoon ? {} : { y: -4 }}
+      whileHover={isUnavailable ? {} : { y: -4 }}
       /* FIX 1: Added `relative z-0 hover:z-10` to prevent Framer Motion's stacking context from overlapping other cards in the grid */
       className="h-full relative z-0 hover:z-10"
     >
@@ -75,7 +77,7 @@ export default function ProductCard({ product, index = 0 }) {
                 onError={() => setImgError(true)}
                 className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                   imgLoaded ? 'opacity-100' : 'opacity-0'
-                } ${product.comingSoon ? 'grayscale-[30%] opacity-80' : ''}`}
+                } ${isUnavailable ? 'grayscale-[30%] opacity-80' : ''}`}
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-green-50 to-green-100">
@@ -84,7 +86,7 @@ export default function ProductCard({ product, index = 0 }) {
               </div>
             )}
 
-            {!product.comingSoon && (
+            {!isUnavailable && (
               /* FIX 2: Added `pointer-events-none` so this gradient overlay doesn't steal the hover state from the mouse */
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             )}
@@ -96,7 +98,7 @@ export default function ProductCard({ product, index = 0 }) {
                   {activeBadge}
                 </span>
               )}
-              {discount && !product.comingSoon && (
+              {discount && !isUnavailable && (
                 <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-red-500 text-white shadow-sm">
                   −{discount}%
                 </span>
@@ -122,16 +124,16 @@ export default function ProductCard({ product, index = 0 }) {
             <div className="absolute bottom-0 left-0 right-0 z-10 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
               <button
                 onClick={handleAddToCart}
-                disabled={product.comingSoon}
+                disabled={isUnavailable}
                 className={`w-full py-2 rounded-lg text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all duration-200 shadow-lg ${
-                  product.comingSoon
+                  isUnavailable
                     ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed shadow-none'
                     : justAdded
                     ? 'bg-green-500 text-white'
                     : 'bg-white text-green-800 hover:bg-green-800 hover:text-white'
                 }`}
               >
-                {product.comingSoon ? (
+                {isUnavailable ? (
                   <span className="flex items-center gap-1.5">
                     <Calendar size={13} /> Coming Soon
                   </span>
@@ -192,7 +194,7 @@ export default function ProductCard({ product, index = 0 }) {
 
               {/* Left: price or coming soon pill */}
               <div className="min-w-0">
-                {product.comingSoon ? (
+                {isUnavailable ? (
                   <span className="text-[10px] sm:text-xs font-semibold text-green-600 bg-green-50 border border-green-200 px-2 py-1 rounded-lg inline-block">
                     Available Soon
                   </span>
@@ -217,19 +219,19 @@ export default function ProductCard({ product, index = 0 }) {
 
               {/* Right: add button */}
               <motion.button
-                whileTap={product.comingSoon ? {} : { scale: 0.85 }}
+                whileTap={isUnavailable ? {} : { scale: 0.85 }}
                 onClick={handleAddToCart}
-                disabled={product.comingSoon}
-                aria-label={product.comingSoon ? 'Coming soon' : 'Add to cart'}
+                disabled={isUnavailable}
+                aria-label={isUnavailable ? 'Coming soon' : 'Add to cart'}
                 className={`flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold transition-all duration-200 ${
-                  product.comingSoon
+                  isUnavailable
                     ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
                     : justAdded
                     ? 'bg-green-500 text-white active:scale-90'
                     : 'bg-green-100 text-green-800 hover:bg-green-800 hover:text-white active:scale-90'
                 }`}
               >
-                {product.comingSoon ? (
+                {isUnavailable ? (
                   <>
                     <Calendar size={11} className="sm:hidden" />
                     <Calendar size={13} className="hidden sm:block" />
@@ -249,7 +251,7 @@ export default function ProductCard({ product, index = 0 }) {
             </div>
 
             {/* Tags — desktop only */}
-            {!product.comingSoon && product.tags?.length > 0 && (
+            {!isUnavailable && product.tags?.length > 0 && (
               <div className="hidden sm:flex gap-1.5 mt-2.5 flex-wrap">
                 {product.tags.slice(0, 2).map(tag => (
                   <span key={tag} className="text-[9px] font-semibold text-green-600 bg-green-50 border border-green-100 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
