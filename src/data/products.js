@@ -499,7 +499,7 @@ export const PRODUCTS = [
     id: 106, name: 'Himalayan Shilajit Resin', slug: 'himalayan-shilajit-pi',
     category: 'Shilajit', subcategory: 'Dry Fruits', emoji: '🪨',
     panIndia: true, deliveryZone: 'pan-india',
-    image:  u('1607006344380-b6775a0824a7'),
+    image:  '/products/shilajit.jpg',
     images: [u('1607006344380-b6775a0824a7', 1200)],
     price: 850, originalPrice: 1100, unit: 'per 10g', weight: '10g',
     rating: 4.8, reviews: 178, badge: 'Authentic', inStock: true,
