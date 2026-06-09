@@ -114,11 +114,14 @@ export default function ProfilePage() {
     }
   }
 
-  // ── Logout — logout first, then navigate so ProtectedRoute doesn't intercept ──
-  const handleLogout = async () => {
-    await logout()
-    toast.add('👋 Signed out. See you soon!')
+  // Navigate away FIRST so ProtectedRoute unmounts before logout clears auth state.
+  // If logout() runs first, ProtectedRoute sees isLoggedIn=false and redirects to /login.
+  const handleLogout = () => {
     navigate('/', { replace: true })
+    setTimeout(() => {
+      logout()
+      toast.add('👋 Signed out. See you soon!')
+    }, 50)
   }
 
   const handleDeleteAccount = async () => {

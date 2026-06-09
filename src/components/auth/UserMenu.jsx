@@ -25,11 +25,13 @@ export default function UserMenu({ isOpen, onClose }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [isOpen, onClose])
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     onClose()
-    await logout()
-    toast.add('👋 Signed out successfully. See you soon!')
     navigate('/', { replace: true })
+    setTimeout(() => {
+      logout()
+      toast.add('👋 Signed out successfully. See you soon!')
+    }, 50)
   }
 
   if (!user) return null
