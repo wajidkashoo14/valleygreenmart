@@ -3,20 +3,31 @@ import { collection, doc, setDoc, getDocs, query, where, orderBy, serverTimestam
 
 /** Fetch orders for a specific logged-in user */
 export async function getUserOrders(uid) {
+  // No orderBy here — avoids requiring a composite Firestore index.
+  // We sort client-side instead.
   const q = query(
     collection(db, 'orders'),
-    where('customer.uid', '==', uid),
-    orderBy('placedAt', 'desc')
+    where('customer.uid', '==', uid)
   )
   const snap = await getDocs(q)
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+  const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+  // Sort newest first
+  return orders.sort((a, b) => {
+    const ta = a.placedAt?.toDate?.() ?? new Date(a.placedAt ?? 0)
+    const tb = b.placedAt?.toDate?.() ?? new Date(b.placedAt ?? 0)
+    return tb - ta
+  })
 }
 
 /** Fetch all orders (admin use only) */
 export async function getAllOrders() {
-  const q = query(collection(db, 'orders'), orderBy('placedAt', 'desc'))
-  const snap = await getDocs(q)
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+  const snap = await getDocs(collection(db, 'orders'))
+  const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+  return orders.sort((a, b) => {
+    const ta = a.placedAt?.toDate?.() ?? new Date(a.placedAt ?? 0)
+    const tb = b.placedAt?.toDate?.() ?? new Date(b.placedAt ?? 0)
+    return tb - ta
+  })
 }
 
 /**

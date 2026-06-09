@@ -39,17 +39,17 @@ export default function Checkout() {
     state:     'Jammu & Kashmir',
   })
 
-  const eta = getDeliveryETA(form.state)
-
-  // Redirect to cart if empty
-  useEffect(() => {
-    if (!placed && cartProducts.length === 0) navigate('/cart', { replace: true })
-  }, [cartProducts.length, placed])
-
+  const navigate  = useNavigate()
+  const toast     = useToastStore()
   const { cartProducts, subtotal, delivery, total, discountAmt, clearCart } = useCart()
   const { user }  = useAuthStore()
-  const toast     = useToastStore()
-  const navigate  = useNavigate()
+
+  const eta = getDeliveryETA(form.state)
+
+  // Redirect to cart if cart is empty (but not after placing an order)
+  useEffect(() => {
+    if (!placed && !placing && cartProducts.length === 0) navigate('/cart', { replace: true })
+  }, [cartProducts.length, placed, placing])
 
   const setField = k => e => {
     setForm(f => ({ ...f, [k]: e.target.value }))
@@ -63,7 +63,7 @@ export default function Checkout() {
     if (!form.firstName.trim())                          e.firstName = 'First name is required'
     if (!form.lastName.trim())                           e.lastName  = 'Last name is required'
     if (!form.phone.trim())                              e.phone     = 'Phone number is required'
-    else if (!/^[+\d][\d\s\-]{8,14}$/.test(form.phone)) e.phone     = 'Enter a valid phone number'
+    else if (!/^[+\d][\d\s\-()]{7,15}$/.test(form.phone)) e.phone   = 'Enter a valid phone number'
     if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
                                                          e.email     = 'Enter a valid email address'
     if (!form.address.trim())                            e.address   = 'Address is required'
@@ -97,16 +97,22 @@ export default function Checkout() {
         orderId: newOrderId, eta: eta.label,
       }).catch(err => console.warn('Email send failed:', err))
 
+      setPlaced(true)   // set BEFORE clearCart so useEffect sees placed=true
       clearCart()
-      setPlaced(true)
       toast.add('🎉 Order placed successfully!')
-      setTimeout(() => navigate('/'), 4000)
     } finally {
       setPlacing(false)
     }
   }
 
   // ── Order placed screen ──────────────────────────────────────────────────────
+  // Auto-redirect home 5s after order placed
+  useEffect(() => {
+    if (!placed) return
+    const t = setTimeout(() => navigate('/', { replace: true }), 5000)
+    return () => clearTimeout(t)
+  }, [placed])
+
   if (placed) return (
     <PageWrapper>
       <div className="max-w-md mx-auto px-4 py-16 sm:py-24 text-center">
@@ -128,7 +134,20 @@ export default function Checkout() {
           ) : (
             <p className="text-green-600 mb-2">We'll contact you on <span className="font-semibold">{form.phone}</span> to confirm.</p>
           )}
-          <p className="text-green-500 text-sm">Redirecting to home in a moment…</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-3 bg-green-800 hover:bg-green-700 text-white rounded-full font-semibold text-sm transition-colors"
+            >
+              Continue Shopping
+            </button>
+            <button
+              onClick={() => navigate('/orders')}
+              className="px-6 py-3 border border-green-300 hover:bg-green-50 text-green-700 rounded-full font-semibold text-sm transition-colors"
+            >
+              View My Orders
+            </button>
+          </div>
         </motion.div>
       </div>
     </PageWrapper>
