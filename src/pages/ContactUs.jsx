@@ -32,7 +32,7 @@ const CONTACT_INFO = [
   {
     icon: <MapPin size={20} />,
     label: 'Visit Us',
-    lines: ['Saida Kadal Bridge, Rainwari', 'Jammu & Kashmir — 190003'],
+    lines: ['Saida Kadal Bridge, Rainawari', 'Jammu & Kashmir — 190003'],
     color: 'bg-green-100 text-green-700',
   },
   {
@@ -539,7 +539,7 @@ export default function ContactUs() {
             </h2>
 
             <p className="text-green-500 text-sm">
-              Saida Kadal Bridge, Rainwari, Srinagar, Jammu &
+              Saida Kadal Bridge, Rainawari, Srinagar, Jammu &
               Kashmir — 190003
             </p>
           </motion.div>
@@ -549,7 +549,7 @@ export default function ContactUs() {
             <div className="relative w-full h-0 pb-[56.25%] sm:pb-0 sm:h-80 lg:h-[420px]">
               <iframe
                 title="Valley Green Mart Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3300!2d74.8089!3d34.0937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38e18f5c8e2b8e4d%3A0x0!2sSaida+Kadal+Bridge%2C+Rainwari%2C+Srinagar%2C+Jammu+and+Kashmir+190003!5e0!3m2!1sen!2sin!4v1"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3300!2d74.8089!3d34.0937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38e18f5c8e2b8e4d%3A0x0!2sSaida+Kadal+Bridge%2C+Rainawari%2C+Srinagar%2C+Jammu+and+Kashmir+190003!5e0!3m2!1sen!2sin!4v1"
                 className="absolute inset-0 w-full h-full border-0"
                 allowFullScreen
                 loading="lazy"
@@ -562,11 +562,11 @@ export default function ContactUs() {
                 <MapPin size={15} className="text-green-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm font-semibold text-green-900">Valley Green Mart</p>
-                  <p className="text-xs text-green-500">Saida Kadal Bridge, Rainwari, Srinagar — 190003</p>
+                  <p className="text-xs text-green-500">Saida Kadal Bridge, Rainawari, Srinagar — 190003</p>
                 </div>
               </div>
               <a
-                href="https://maps.google.com/?q=Saida+Kadal+Bridge+Rainwari+Srinagar+Kashmir+190003"
+                href="https://maps.google.com/?q=Saida+Kadal+Bridge+Rainawari+Srinagar+Kashmir+190003"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-bold text-white bg-green-700 hover:bg-green-600 px-4 py-2 rounded-full transition-colors w-full sm:w-auto justify-center"

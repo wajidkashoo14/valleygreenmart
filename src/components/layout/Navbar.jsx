@@ -364,7 +364,7 @@ export default function Navbar() {
                       <p className="text-[9px] uppercase tracking-wider text-green-500 mb-2 font-bold">Top Pick</p>
                       <button onClick={() => { navigate('/products/1'); setMegaOpen(false) }} className="w-full text-left group">
                         <div className="w-full h-20 rounded-xl overflow-hidden mb-2">
-                          <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=300&q=85&auto=format&fit=crop" alt="Saffron" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                          <img src="/products/saffron-product.webp" alt="Saffron" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                         </div>
                         <div className="text-[11px] font-semibold text-white">Kashmir Saffron</div>
                         <div className="text-[10px] text-green-400 mt-0.5">From ₹4,800/g</div>
@@ -466,7 +466,7 @@ export default function Navbar() {
               <div className="border-t border-green-100 p-4 bg-green-50">
                 <div className="flex items-center gap-1.5 text-xs text-green-600 justify-center">
                   <MapPin size={11} />
-                  <span>Saida Kadal Bridge, Rainwari, Srinagar</span>
+                  <span>Saida Kadal Bridge, Rainawari, Srinagar</span>
                 </div>
               </div>
             </motion.div>

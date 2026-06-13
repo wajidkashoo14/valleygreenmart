@@ -31,7 +31,7 @@ try {
       email:        DEMO_EMAIL,
       phone:        '+91 77809 66909',
       avatar:       'https://api.dicebear.com/7.x/initials/svg?seed=Demo+User&backgroundColor=2d7a50&textColor=ffffff&fontSize=36',
-      address:      'Saida Kadal Bridge, Rainwari',
+      address:      'Saida Kadal Bridge, Rainawari',
       city:         'Srinagar',
       pincode:      '190003',
       joinedAt:     '2024-01-01T00:00:00.000Z',

@@ -184,12 +184,12 @@ export default function Footer() {
             {/* Contact info */}
             <div className="space-y-2 text-sm text-green-400 mb-6">
               <a
-                href="https://maps.google.com/?q=Saida+Kadal+Bridge+Rainwari+Srinagar+Kashmir+190003"
+                href="https://maps.google.com/?q=Saida+Kadal+Bridge+Rainawari+Srinagar+Kashmir+190003"
                 target="_blank" rel="noopener noreferrer"
                 className="flex items-start gap-2 hover:text-white transition-colors"
               >
                 <MapPin size={14} className="text-green-500 flex-shrink-0 mt-0.5" />
-                <span>Saida Kadal Bridge, Rainwari,<br />Srinagar, Kashmir — 190003</span>
+                <span>Saida Kadal Bridge, Rainawari,<br />Srinagar, Kashmir — 190003</span>
               </a>
               <a href="tel:+917780966909" className="flex items-center gap-2 hover:text-white transition-colors">
                 <Phone size={14} className="text-green-500 flex-shrink-0" />
